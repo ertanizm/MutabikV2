@@ -2,7 +2,7 @@
 // Giriş bilgileri
 $host = 'localhost';
 $masterDbUser = 'root';
-$masterDbPass = '';
+$masterDbPass = 'akdere';
 $masterDbName = 'master_db';
 
 // 0. master_db yoksa oluştur ve tabloları oluştur
