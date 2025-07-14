@@ -1,0 +1,63 @@
+/* verify.css */
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.verify-container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 350px;
+  text-align: center;
+}
+
+.verify-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.verify-container input[type="text"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0 20px 0;
+  border: 1.8px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.verify-container input[type="text"]:focus {
+  border-color: #4A90E2;
+  outline: none;
+}
+
+.verify-container button {
+  width: 100%;
+  padding: 12px 0;
+  background-color: #4A90E2;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.verify-container button:hover {
+  background-color: #357ABD;
+}
+
+.verify-container p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
