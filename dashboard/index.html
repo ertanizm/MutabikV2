@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - MUTABIK</title>
+
+  <!-- Bootstrap CSS (örnek için) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Typicons icon font -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    /* Yan menü */
+    .sidebar {
+      width: 220px;
+      background: #2f3d4a;
+      color: white;
+      flex-shrink: 0;
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar .user-info {
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    .sidebar .menu-button {
+      background: transparent;
+      border: none;
+      color: white;
+      width: 100%;
+      padding: 12px 20px;
+      text-align: left;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      transition: all 0.3s;
+    }
+    .sidebar .menu-button.active, 
+    .sidebar .menu-button:hover {
+      background: #1f2a38;
+      border-left-color: #2ecc71;
+    }
+    /* İçerik alanı */
+    .main-content {
+      flex-grow: 1;
+      padding: 2rem;
+      background: #f7f9fc;
+      overflow-y: auto;
+    }
+    .cards {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      flex: 1 1 200px;
+      box-shadow: 0 0 6px rgb(0 0 0 / 0.1);
+    }
+    .card h3 {
+      margin-bottom: 1rem;
+    }
+    .value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2ecc71;
+    }
+
+    /* Üst navbar */
+    nav.navbar-custom {
+      position: fixed;
+      top: 0;
+      left: 220px;
+      right: 0;
+      height: 56px;
+      background: white;
+      box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+      z-index: 1000;
+    }
+    nav.navbar-custom .navbar-brand {
+      font-weight: bold;
+      color: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="user-info">👤 Çağla Yeniay</div>
+    <button class="menu-button active">📊 Dashboard</button>
+    <button class="menu-button">💰 Bakiye</button>
+    <button class="menu-button">🧾 Alacaklar</button>
+    <button class="menu-button">💳 Borçlar</button>
+    <button class="menu-button">📅 Tahsilat</button>
+  </div>
+
+  <nav class="navbar-custom">
+    <a href="#" class="navbar-brand">MUTABIK</a>
+    
+  </nav>
+
+  <div class="main-content" style="margin-top: 56px;">
+    <h1>📊 Dashboard</h1>
+
+    <div class="cards" style="margin-top: 20px;">
+      <div class="card">
+        <h3>Bakiye</h3>
+        <div class="value">₺12.340</div>
+      </div>
+      <div class="card">
+        <h3>Alacaklar</h3>
+        <div class="value">₺5.000</div>
+      </div>
+      <div class="card">
+        <h3>Borçlar</h3>
+        <div class="value">₺2.800</div>
+      </div>
+      <div class="card">
+        <h3>Tahsilat</h3>
+        <div class="value">₺3.200</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <label for="monthRange">Ay Seçimi:</label>
+      <select id="monthRange">
+        <option value="0-5">Ocak - Haziran</option>
+        <option value="6-11">Temmuz - Aralık</option>
+        <option value="0-11">Tüm Yıl</option>
+      </select>
+    </div>
+
+    <!-- Grafikler -->
+    <div style="margin-top: 20px;">
+      <canvas id="barChart" width="800" height="400"></canvas>
+    </div>
+    <div style="margin-top: 20px; max-width: 400px;">
+      <canvas id="doughnutChart" width="400" height="400"></canvas>
+    </div>
+
+    <!-- Yeni veri formu -->
+    <div class="card" style="margin-top: 40px; max-width: 400px;">
+      <h3>Yeni Veri Ekle</h3>
+      <form id="veriForm">
+        <label>Ay:
+          <select id="aySec" required>
+            <option value="" disabled selected>Seçiniz</option>
+            <option value="0">Ocak</option>
+            <option value="1">Şubat</option>
+            <option value="2">Mart</option>
+            <option value="3">Nisan</option>
+            <option value="4">Mayıs</option>
+            <option value="5">Haziran</option>
+            <option value="6">Temmuz</option>
+            <option value="7">Ağustos</option>
+            <option value="8">Eylül</option>
+            <option value="9">Ekim</option>
+            <option value="10">Kasım</option>
+            <option value="11">Aralık</option>
+          </select>
+        </label><br /><br />
+        <label>Gelir: <input type="number" id="gelirInput" required /></label><br /><br />
+        <label>Gider: <input type="number" id="giderInput" required /></label><br /><br />
+        <button type="submit">Güncelle</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // sonra doldur
+    const allLabels = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+    const allGelir =    [12000, 15000, 14000, 17000, 16000, 18000, 15500, 16500, 17200, 16000, 17800, 19000];
+    const allGider =    [8000, 9500, 9000, 10000, 11000, 10500, 9800, 10300, 11000, 10000, 11500, 12000];
+
+    let barChart;
+
+    function drawBarChart(start, end) {
+      const ctxBar = document.getElementById('barChart').getContext('2d');
+      const slicedLabels = allLabels.slice(start, end + 1);
+      const slicedGelir = allGelir.slice(start, end + 1);
+      const slicedGider = allGider.slice(start, end + 1);
+
+      if (barChart) barChart.destroy();
+
+      barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: slicedLabels,
+          datasets: [
+            {
+              label: 'Gelir',
+              data: slicedGelir,
+              backgroundColor: 'rgba(46, 204, 113, 0.8)'
+            },
+            {
+              label: 'Gider',
+              data: slicedGider,
+              backgroundColor: 'rgba(231, 76, 60, 0.8)'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    drawBarChart(0, 5);
+
+    document.getElementById('monthRange').addEventListener('change', function () {
+      const [start, end] = this.value.split('-').map(Number);
+      drawBarChart(start, end);
+    });
+
+    // Doughnut Chart
+    const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+    new Chart(ctxDoughnut, {
+      type: 'doughnut',
+      data: {
+        labels: ['Ödendi', 'Bekliyor', 'Gecikti'],
+        datasets: [{
+          data: [60, 25, 15],
+          backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
+
+    // Form submit işlemi
+    document.getElementById('veriForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const ayIndex = parseInt(document.getElementById('aySec').value);
+      const yeniGelir = parseInt(document.getElementById('gelirInput').value);
+      const yeniGider = parseInt(document.getElementById('giderInput').value);
+
+      allGelir[ayIndex] = yeniGelir;
+      allGider[ayIndex] = yeniGider;
+
+      // Mevcut filtreye göre grafiği güncelle
+      const [start, end] = document.getElementById('monthRange').value.split('-').map(Number);
+      drawBarChart(start, end);
+    });
+  </script>
+</body>
+</html>
