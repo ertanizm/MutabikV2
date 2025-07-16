@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard - MUTABIK</title>
-
-  <!-- Bootstrap CSS (örnek için) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  
-  <!-- Typicons icon font -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.min.css" rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MutabikV2 Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
     body {
+      background: #f8f9fa;
+      min-height: 100vh;
+      height: 100%;
+    }
+    .dashboard-wrapper {
       display: flex;
       min-height: 100vh;
-      overflow-x: hidden;
+      height: 100vh;
+      background: #f8f9fa;
     }
-    /* Yan menü */
     .sidebar {
-      width: 220px;
+      width: 200px;
       background: #2f3d4a;
       color: white;
       flex-shrink: 0;
@@ -27,240 +32,850 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+      height: 100vh;
+      position: relative;
+      z-index: 10;
     }
     .sidebar .user-info {
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      background: #22303a;
+      padding: 8px 16px;
+      border-radius: 10px;
+      width: 90%;
+      text-align: center;
     }
     .sidebar .menu-button {
       background: transparent;
       border: none;
       color: white;
       width: 100%;
-      padding: 12px 20px;
+      padding: 8px 14px;
       text-align: left;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       border-left: 4px solid transparent;
       transition: all 0.3s;
+      border-radius: 0 16px 16px 0;
+      margin-bottom: 2px;
+      outline: none;
     }
     .sidebar .menu-button.active, 
     .sidebar .menu-button:hover {
       background: #1f2a38;
       border-left-color: #2ecc71;
-    }
-    /* İçerik alanı */
-    .main-content {
-      flex-grow: 1;
-      padding: 2rem;
-      background: #f7f9fc;
-      overflow-y: auto;
-    }
-    .cards {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 8px;
-      flex: 1 1 200px;
-      box-shadow: 0 0 6px rgb(0 0 0 / 0.1);
-    }
-    .card h3 {
-      margin-bottom: 1rem;
-    }
-    .value {
-      font-size: 1.5rem;
-      font-weight: bold;
       color: #2ecc71;
     }
-
-    /* Üst navbar */
-    nav.navbar-custom {
-      position: fixed;
-      top: 0;
-      left: 220px;
-      right: 0;
-      height: 56px;
-      background: white;
-      box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+    @media (max-width: 900px) {
+      .dashboard-wrapper { flex-direction: column; }
+      .sidebar { flex-direction: row; width: 100%; min-height: unset; height: auto; position: static; }
+      .sidebar .user-info { display: none; }
+      .sidebar .menu-button { font-size: 0.95rem; padding: 8px 8px; border-radius: 0; text-align: center; border-left: none; border-bottom: 4px solid transparent; }
+      .sidebar .menu-button.active, .sidebar .menu-button:hover { border-left: none; border-bottom: 4px solid #2ecc71; background: #1f2a38; color: #2ecc71; }
+    }
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      background: #fff;
+      min-height: 100vh;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 100%;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+    .dashboard-card {
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(80, 80, 160, 0.10);
+      border: 1px solid #ececec;
+      background: #fff;
+      margin-bottom: 18px;
+      padding: 18px 12px;
+      transition: box-shadow 0.2s;
+    }
+    .dashboard-card:hover {
+      box-shadow: 0 8px 32px rgba(80, 80, 160, 0.16);
+    }
+    .dashboard-card h5 {
       display: flex;
       align-items: center;
-      padding: 0 1rem;
-      z-index: 1000;
+      gap: 8px;
+      font-size: 1.08em;
+      margin-bottom: 0.7em;
     }
-    nav.navbar-custom .navbar-brand {
-      font-weight: bold;
-      color: #2ecc71;
+    .dashboard-card h5 .card-icon {
+      font-size: 1.2em;
+      opacity: 0.8;
+    }
+    .summary-box {
+      border-radius: 10px;
+      color: #fff;
+      padding: 12px 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 6px rgba(80, 80, 160, 0.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .summary-cari { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .summary-stok { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .summary-fatura { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .summary-box i { font-size: 1.3rem; opacity: 0.8; }
+    .table thead { background: #f3f3fa; }
+    .tab-content { background: #fff; border-radius: 0 0 12px 12px; padding: 12px; }
+    .chart-container { min-height: 120px; }
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+    .overview-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .overview-col { flex: 1 1 220px; min-width: 220px; max-width: 100%; }
+    h1, h5, .fs-3, .fs-5 { font-size: 1.1em !important; }
+    .dashboard-card h5 { font-size: 1em; margin-bottom: 0.7em; }
+    .table { font-size: 0.92em; }
+    .badge { font-size: 0.85em; }
+    .lead { font-size: 1em; }
+    @media (max-width: 1200px) {
+      .overview-row { flex-direction: column; gap: 8px; }
+      .overview-col { min-width: 100%; }
+    }
+    /* Sadece Genel Bakış (overview) sekmesi için küçültülmüş boyutlar */
+    #overview .dashboard-card {
+      padding: 10px 6px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+    #overview .summary-box {
+      padding: 8px 6px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      gap: 7px;
+    }
+    #overview .summary-box i {
+      font-size: 1.1rem;
+    }
+    #overview .table {
+      font-size: 0.85em;
+    }
+    #overview h5, #overview .fs-3, #overview .fs-5 {
+      font-size: 0.95em !important;
+    }
+    #overview .overview-row {
+      gap: 6px;
+    }
+    #overview .overview-col {
+      min-width: 180px;
+      flex: 1 1 180px;
+    }
+    #overview .badge {
+      font-size: 0.75em;
+    }
+    #overview .dashboard-card h5 {
+      font-size: 0.92em;
+      margin-bottom: 0.5em;
+    }
+    #overview .lead {
+      font-size: 0.92em;
+    }
+    /* Tahsilat ve Stok sekmesindeki grafikler için daha büyük boyut */
+    #tahsilat .chart-container, #stok .chart-container {
+      min-height: 320px;
+      height: 320px;
+    }
+    /* Navbar ve modern kart stilleri */
+    .navbar {
+      box-shadow: 0 2px 8px rgba(80,80,160,0.07)!important;
+    }
+    .navbar .ms-2 { display: none !important; }
+    .navbar .dropdown-toggle { padding: 0 !important; }
+    /* Tema geçişi için basit dark mode */
+    body.dark-mode {
+      background: #23272f;
+      color: #f3f3fa;
+    }
+    body.dark-mode .main-content, body.dark-mode .dashboard-card, body.dark-mode .tab-content {
+      background: #23272f !important;
+      color: #f3f3fa !important;
+      border-color: #333 !important;
+    }
+    body.dark-mode .sidebar {
+      background: #181c22 !important;
+      color: #fff !important;
+    }
+    body.dark-mode .navbar {
+      background: #181c22 !important;
+      color: #fff !important;
+    }
+    body.dark-mode .dashboard-card {
+      box-shadow: 0 4px 24px rgba(20,20,40,0.18);
+    }
+    body.dark-mode .table, body.dark-mode .list-group-item {
+      background: #23272f !important;
+      color: #f3f3fa !important;
+    }
+    body.dark-mode .badge {
+      filter: brightness(0.8);
     }
   </style>
 </head>
 <body>
-
-  <div class="sidebar">
-    <div class="user-info">👤 Çağla Yeniay</div>
-    <button class="menu-button active">📊 Dashboard</button>
-    <button class="menu-button">💰 Bakiye</button>
-    <button class="menu-button">🧾 Alacaklar</button>
-    <button class="menu-button">💳 Borçlar</button>
-    <button class="menu-button">📅 Tahsilat</button>
-  </div>
-
-  <nav class="navbar-custom">
-    <a href="#" class="navbar-brand">MUTABIK</a>
-    
+  <!-- Sabit Navbar Başlangıç -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top" style="height:60px;z-index:1001;">
+    <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4b0.png" alt="Logo" style="height:36px;width:36px;">
+        <span class="fw-bold ms-2" style="color:#764ba2;font-size:1.2rem;">MutabikV2</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-link position-relative p-1" title="Mesajlar"><i class="fas fa-envelope fa-lg"></i><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span></button>
+        <button class="btn btn-link position-relative p-1" title="Bildirimler"><i class="fas fa-bell fa-lg"></i><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">3</span></button>
+        <button class="btn btn-link p-1" id="themeToggle" title="Tema Değiştir"><i class="fas fa-moon fa-lg"></i></button>
+        <div class="dropdown">
+          <button class="btn btn-link dropdown-toggle d-flex align-items-center p-1" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" class="rounded-circle" style="height:32px;width:32px;object-fit:cover;">
+            <span class="ms-2 d-none d-md-inline">Atia</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="#">Profil</a></li>
+            <li><a class="dropdown-item" href="#">Ayarlar</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Çıkış Yap</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </nav>
-
-  <div class="main-content" style="margin-top: 56px;">
-    <h1>📊 Dashboard</h1>
-
-    <div class="cards" style="margin-top: 20px;">
-      <div class="card">
-        <h3>Bakiye</h3>
-        <div class="value">₺12.340</div>
+  <div style="height:60px;"></div>
+  <!-- Sabit Navbar Bitiş -->
+  <div class="dashboard-wrapper">
+    <div class="sidebar">
+      <div class="user-info">👤 Atia</div>
+      <button class="menu-button active" data-tab="overview">📊 Genel Bakış</button>
+      <button class="menu-button" data-tab="cari">💰 Bakiye</button>
+      <button class="menu-button" data-tab="alacaklar">🧾 Alacaklar</button>
+      <button class="menu-button" data-tab="borclar">💳 Borçlar</button>
+      <button class="menu-button" data-tab="tahsilat">📅 Tahsilat</button>
+      <button class="menu-button" data-tab="stok">📦 Stok</button>
+    </div>
+    <div class="main-content">
+      <div class="container py-5">
+        <div class="text-center mb-5">
+          <h1 class="fw-bold" style="color:#764ba2">MutabikV2 Dashboard</h1>
+          <p class="lead" style="color:#667eea">Hızlı Finansal Yönetim Paneli</p>
+        </div>
+        <div id="overview" class="tab-section active">
+          <div class="overview-row">
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Bakiye (Cari)</h5>
+                <div class="summary-box summary-cari mb-3">
+                  <i class="fas fa-users"></i>
+                  <div>
+                    <div class="fs-5">Toplam Cari</div>
+                    <div class="fs-3 fw-bold">42</div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>#</th><th>Unvan</th><th>Durum</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>Atia Yazılım</td><td><span class="badge bg-success">Aktif</span></td></tr>
+                      <tr><td>2</td><td>Beta Ltd.</td><td><span class="badge bg-success">Aktif</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Alacaklar</h5>
+                <div class="summary-box summary-cari mb-3">
+                  <i class="fas fa-arrow-down"></i>
+                  <div>
+                    <div class="fs-5">Toplam Alacak</div>
+                    <div class="fs-3 fw-bold">₺ 18.500</div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>#</th><th>Cari</th><th>Tutar</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>Atia Yazılım</td><td>₺ 5.000</td></tr>
+                      <tr><td>2</td><td>Beta Ltd.</td><td>₺ 8.500</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Borçlar</h5>
+                <div class="summary-box summary-stok mb-3">
+                  <i class="fas fa-arrow-up"></i>
+                  <div>
+                    <div class="fs-5">Toplam Borç</div>
+                    <div class="fs-3 fw-bold">₺ 12.200</div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>#</th><th>Tedarikçi</th><th>Tutar</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>Ofis Market</td><td>₺ 2.200</td></tr>
+                      <tr><td>2</td><td>Tekno Bilgisayar</td><td>₺ 10.000</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="overview-row mt-4">
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Tahsilat (Faturalar)</h5>
+                <div class="summary-box summary-fatura mb-3">
+                  <i class="fas fa-file-invoice"></i>
+                  <div>
+                    <div class="fs-5">Toplam Fatura</div>
+                    <div class="fs-3 fw-bold">68</div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>#</th><th>Fatura No</th><th>Tutar</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>FTR-2023-001</td><td>₺ 12.000</td></tr>
+                      <tr><td>2</td><td>FTR-2023-002</td><td>₺ 8.500</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Stok</h5>
+                <div class="summary-box summary-stok mb-3">
+                  <i class="fas fa-boxes"></i>
+                  <div>
+                    <div class="fs-5">Toplam Stok</div>
+                    <div class="fs-3 fw-bold">120</div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>#</th><th>Stok Adı</th><th>Miktar</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>Ofis Sandalyesi</td><td>15</td></tr>
+                      <tr><td>2</td><td>Laptop</td><td>8</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Yeni detaylar başlangıç -->
+          <div class="overview-row mt-4">
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Son 5 İşlem</h5>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>Tarih</th><th>İşlem</th><th>Tutar</th><th>Tip</th></tr></thead>
+                    <tbody>
+                      <tr><td>01.07.2023</td><td>Tahsilat</td><td>₺ 2.000</td><td><span class="badge bg-success">Giriş</span></td></tr>
+                      <tr><td>30.06.2023</td><td>Ödeme</td><td>₺ 1.200</td><td><span class="badge bg-danger">Çıkış</span></td></tr>
+                      <tr><td>29.06.2023</td><td>Stok Girişi</td><td>₺ 3.500</td><td><span class="badge bg-info">Stok</span></td></tr>
+                      <tr><td>28.06.2023</td><td>Fatura</td><td>₺ 4.000</td><td><span class="badge bg-warning">Fatura</span></td></tr>
+                      <tr><td>27.06.2023</td><td>Tahsilat</td><td>₺ 1.000</td><td><span class="badge bg-success">Giriş</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">En Çok Borcu Olan 3 Müşteri</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Gamma A.Ş. <span class="badge bg-danger">₺ 15.000</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Beta Ltd. <span class="badge bg-warning">₺ 8.500</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Atia Yazılım <span class="badge bg-warning">₺ 5.000</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">En Çok Alacaklı Olunan 3 Müşteri</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Ofis Market <span class="badge bg-success">₺ 10.000</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Tekno Bilgisayar <span class="badge bg-success">₺ 7.000</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Kırtasiye Ltd. <span class="badge bg-success">₺ 4.500</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Kritik Stoklar</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Yazıcı Kartuşu <span class="badge bg-danger">3</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Klavye <span class="badge bg-warning">5</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Mouse <span class="badge bg-warning">7</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="overview-row mt-4">
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Son Eklenen Cariler</h5>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>Unvan</th><th>Tarih</th><th>Durum</th></tr></thead>
+                    <tbody>
+                      <tr><td>Delta Ltd.</td><td>01.07.2023</td><td><span class="badge bg-success">Aktif</span></td></tr>
+                      <tr><td>Epsilon A.Ş.</td><td>30.06.2023</td><td><span class="badge bg-success">Aktif</span></td></tr>
+                      <tr><td>Zeta Ticaret</td><td>29.06.2023</td><td><span class="badge bg-danger">Pasif</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Son Eklenen Faturalar</h5>
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>Fatura No</th><th>Tarih</th><th>Tutar</th></tr></thead>
+                    <tbody>
+                      <tr><td>FTR-2023-004</td><td>01.07.2023</td><td>₺ 2.500</td></tr>
+                      <tr><td>FTR-2023-003</td><td>30.06.2023</td><td>₺ 4.200</td></tr>
+                      <tr><td>FTR-2023-002</td><td>29.06.2023</td><td>₺ 8.500</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Toplam Gelir/Gider</h5>
+                <div class="chart-container" style="height:180px;min-height:180px;">
+                  <canvas id="gelirGiderChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Kısa Vadeli Borç/Alacak</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Kısa Vadeli Borç <span class="badge bg-danger">₺ 4.000</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Kısa Vadeli Alacak <span class="badge bg-success">₺ 6.500</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="overview-row mt-4">
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Dönemsel Karşılaştırma</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Bu Ay Gelir <span class="badge bg-success">₺ 12.000</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Geçen Ay Gelir <span class="badge bg-info">₺ 9.500</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Bu Ay Gider <span class="badge bg-danger">₺ 7.000</span></li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">Geçen Ay Gider <span class="badge bg-warning">₺ 6.200</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="overview-col">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Uyarı & Kritik Durumlar</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item text-danger">3 müşterinin vadesi geçmiş borcu var!</li>
+                  <li class="list-group-item text-warning">2 stok kritik seviyede!</li>
+                  <li class="list-group-item text-info">Bu ay 2 yeni cari eklendi.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Yeni detaylar bitiş -->
+        </div>
+        <div id="cari" class="tab-section">
+          <!-- Cari Tab (Bakiye) -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="summary-box summary-cari">
+                <i class="fas fa-users"></i>
+                <div>
+                  <div class="fs-5">Toplam Cari</div>
+                  <div class="fs-3 fw-bold">42</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="summary-box summary-stok">
+                <i class="fas fa-user-plus"></i>
+                <div>
+                  <div class="fs-5">Yeni Cari (Bu Ay)</div>
+                  <div class="fs-3 fw-bold">5</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="summary-box summary-fatura">
+                <i class="fas fa-user-check"></i>
+                <div>
+                  <div class="fs-5">Aktif Cari</div>
+                  <div class="fs-3 fw-bold">38</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-7 mb-4">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Cari Listesi (Örnek)</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Unvan</th>
+                        <th>Telefon</th>
+                        <th>E-posta</th>
+                        <th>Durum</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>1</td><td>Atia Yazılım</td><td>0555 123 45 67</td><td>info@atia.com</td><td><span class="badge bg-success">Aktif</span></td></tr>
+                      <tr><td>2</td><td>Beta Ltd.</td><td>0532 987 65 43</td><td>beta@ltd.com</td><td><span class="badge bg-success">Aktif</span></td></tr>
+                      <tr><td>3</td><td>Gamma A.Ş.</td><td>0544 111 22 33</td><td>gamma@as.com</td><td><span class="badge bg-danger">Pasif</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5 mb-4">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Cari Dağılımı</h5>
+                <div class="chart-container">
+                  <canvas id="cariChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="alacaklar" class="tab-section">
+          <!-- Alacaklar Tab -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="summary-box summary-cari">
+                <i class="fas fa-arrow-down"></i>
+                <div>
+                  <div class="fs-5">Toplam Alacak</div>
+                  <div class="fs-3 fw-bold">₺ 18.500</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="summary-box summary-fatura">
+                <i class="fas fa-clock"></i>
+                <div>
+                  <div class="fs-5">Vadesi Geçen</div>
+                  <div class="fs-3 fw-bold">₺ 2.300</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-card p-4">
+            <h5 class="mb-3">Alacaklar Listesi (Örnek)</h5>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cari</th>
+                    <th>Tutar</th>
+                    <th>Vade</th>
+                    <th>Durum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Atia Yazılım</td><td>₺ 5.000</td><td>01.07.2023</td><td><span class="badge bg-warning">Bekliyor</span></td></tr>
+                  <tr><td>2</td><td>Beta Ltd.</td><td>₺ 8.500</td><td>10.07.2023</td><td><span class="badge bg-success">Tahsil Edildi</span></td></tr>
+                  <tr><td>3</td><td>Gamma A.Ş.</td><td>₺ 5.000</td><td>15.07.2023</td><td><span class="badge bg-danger">Gecikmiş</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="borclar" class="tab-section">
+          <!-- Borçlar Tab -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="summary-box summary-stok">
+                <i class="fas fa-arrow-up"></i>
+                <div>
+                  <div class="fs-5">Toplam Borç</div>
+                  <div class="fs-3 fw-bold">₺ 12.200</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="summary-box summary-fatura">
+                <i class="fas fa-clock"></i>
+                <div>
+                  <div class="fs-5">Vadesi Geçen</div>
+                  <div class="fs-3 fw-bold">₺ 1.500</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-card p-4">
+            <h5 class="mb-3">Borçlar Listesi (Örnek)</h5>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Tedarikçi</th>
+                    <th>Tutar</th>
+                    <th>Vade</th>
+                    <th>Durum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Ofis Market</td><td>₺ 2.200</td><td>05.07.2023</td><td><span class="badge bg-warning">Bekliyor</span></td></tr>
+                  <tr><td>2</td><td>Tekno Bilgisayar</td><td>₺ 10.000</td><td>20.07.2023</td><td><span class="badge bg-danger">Gecikmiş</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="tahsilat" class="tab-section">
+          <!-- Tahsilat Tab (Faturalar) -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="summary-box summary-fatura">
+                <i class="fas fa-file-invoice"></i>
+                <div>
+                  <div class="fs-5">Toplam Fatura</div>
+                  <div class="fs-3 fw-bold">68</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="summary-box summary-stok">
+                <i class="fas fa-lira-sign"></i>
+                <div>
+                  <div class="fs-5">Toplam Tutar</div>
+                  <div class="fs-3 fw-bold">₺ 245.000</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="summary-box summary-cari">
+                <i class="fas fa-calendar-alt"></i>
+                <div>
+                  <div class="fs-5">Bu Ayki Faturalar</div>
+                  <div class="fs-3 fw-bold">12</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-7 mb-4">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Fatura Listesi (Örnek)</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Fatura No</th>
+                        <th>Cari</th>
+                        <th>Tutar</th>
+                        <th>Tarih</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>1</td><td>FTR-2023-001</td><td>Atia Yazılım</td><td>₺ 12.000</td><td>01.06.2023</td></tr>
+                      <tr><td>2</td><td>FTR-2023-002</td><td>Beta Ltd.</td><td>₺ 8.500</td><td>05.06.2023</td></tr>
+                      <tr><td>3</td><td>FTR-2023-003</td><td>Gamma A.Ş.</td><td>₺ 4.200</td><td>10.06.2023</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5 mb-4">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Fatura Dağılımı</h5>
+                <div class="chart-container">
+                  <canvas id="faturaChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="stok" class="tab-section">
+          <!-- Stok Tab -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="summary-box summary-stok">
+                <i class="fas fa-boxes"></i>
+                <div>
+                  <div class="fs-5">Toplam Stok</div>
+                  <div class="fs-3 fw-bold">120</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="summary-box summary-cari">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                  <div class="fs-5">Kritik Stok</div>
+                  <div class="fs-3 fw-bold">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="summary-box summary-fatura">
+                <i class="fas fa-cubes"></i>
+                <div>
+                  <div class="fs-5">Toplam Miktar</div>
+                  <div class="fs-3 fw-bold">2.350</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-7 mb-4">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Stok Listesi (Örnek)</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Stok Kodu</th>
+                        <th>Stok Adı</th>
+                        <th>Birim</th>
+                        <th>Miktar</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>1</td><td>STK-001</td><td>Ofis Sandalyesi</td><td>Adet</td><td>15</td></tr>
+                      <tr><td>2</td><td>STK-002</td><td>Laptop</td><td>Adet</td><td>8</td></tr>
+                      <tr><td>3</td><td>STK-003</td><td>Yazıcı Kartuşu</td><td>Paket</td><td>3</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5 mb-4">
+              <div class="dashboard-card p-4">
+                <h5 class="mb-3">Stok Durumu</h5>
+                <div class="chart-container">
+                  <canvas id="stokChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <h3>Alacaklar</h3>
-        <div class="value">₺5.000</div>
-      </div>
-      <div class="card">
-        <h3>Borçlar</h3>
-        <div class="value">₺2.800</div>
-      </div>
-      <div class="card">
-        <h3>Tahsilat</h3>
-        <div class="value">₺3.200</div>
-      </div>
     </div>
-
-    <div style="margin-top: 40px;">
-      <label for="monthRange">Ay Seçimi:</label>
-      <select id="monthRange">
-        <option value="0-5">Ocak - Haziran</option>
-        <option value="6-11">Temmuz - Aralık</option>
-        <option value="0-11">Tüm Yıl</option>
-      </select>
-    </div>
-
-    <!-- Grafikler -->
-    <div style="margin-top: 20px;">
-      <canvas id="barChart" width="800" height="400"></canvas>
-    </div>
-    <div style="margin-top: 20px; max-width: 400px;">
-      <canvas id="doughnutChart" width="400" height="400"></canvas>
-    </div>
-
-    <!-- Yeni veri formu -->
-    <div class="card" style="margin-top: 40px; max-width: 400px;">
-      <h3>Yeni Veri Ekle</h3>
-      <form id="veriForm">
-        <label>Ay:
-          <select id="aySec" required>
-            <option value="" disabled selected>Seçiniz</option>
-            <option value="0">Ocak</option>
-            <option value="1">Şubat</option>
-            <option value="2">Mart</option>
-            <option value="3">Nisan</option>
-            <option value="4">Mayıs</option>
-            <option value="5">Haziran</option>
-            <option value="6">Temmuz</option>
-            <option value="7">Ağustos</option>
-            <option value="8">Eylül</option>
-            <option value="9">Ekim</option>
-            <option value="10">Kasım</option>
-            <option value="11">Aralık</option>
-          </select>
-        </label><br /><br />
-        <label>Gelir: <input type="number" id="gelirInput" required /></label><br /><br />
-        <label>Gider: <input type="number" id="giderInput" required /></label><br /><br />
-        <button type="submit">Güncelle</button>
-      </form>
-    </div>
-
   </div>
-
-  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // sonra doldur
-    const allLabels = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-    const allGelir =    [12000, 15000, 14000, 17000, 16000, 18000, 15500, 16500, 17200, 16000, 17800, 19000];
-    const allGider =    [8000, 9500, 9000, 10000, 11000, 10500, 9800, 10300, 11000, 10000, 11500, 12000];
-
-    let barChart;
-
-    function drawBarChart(start, end) {
-      const ctxBar = document.getElementById('barChart').getContext('2d');
-      const slicedLabels = allLabels.slice(start, end + 1);
-      const slicedGelir = allGelir.slice(start, end + 1);
-      const slicedGider = allGider.slice(start, end + 1);
-
-      if (barChart) barChart.destroy();
-
-      barChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-          labels: slicedLabels,
-          datasets: [
-            {
-              label: 'Gelir',
-              data: slicedGelir,
-              backgroundColor: 'rgba(46, 204, 113, 0.8)'
-            },
-            {
-              label: 'Gider',
-              data: slicedGider,
-              backgroundColor: 'rgba(231, 76, 60, 0.8)'
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: { y: { beginAtZero: true } }
-        }
+    // Sidebar tab switching
+    document.querySelectorAll('.sidebar .menu-button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.sidebar .menu-button').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var tab = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-section').forEach(function(sec) { sec.classList.remove('active'); });
+        document.getElementById(tab).classList.add('active');
       });
-    }
-
-    drawBarChart(0, 5);
-
-    document.getElementById('monthRange').addEventListener('change', function () {
-      const [start, end] = this.value.split('-').map(Number);
-      drawBarChart(start, end);
     });
-
-    // Doughnut Chart
-    const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
-    new Chart(ctxDoughnut, {
+    // Cari Chart
+    new Chart(document.getElementById('cariChart'), {
       type: 'doughnut',
       data: {
-        labels: ['Ödendi', 'Bekliyor', 'Gecikti'],
+        labels: ['Aktif', 'Pasif'],
         datasets: [{
-          data: [60, 25, 15],
-          backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c']
+          data: [38, 4],
+          backgroundColor: ['#43e97b', '#f5576c'],
+        }]
+      },
+      options: { plugins: { legend: { position: 'bottom' } } }
+    });
+    // Stok Chart
+    new Chart(document.getElementById('stokChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Ofis Sandalyesi', 'Laptop', 'Yazıcı Kartuşu'],
+        datasets: [{
+          label: 'Miktar',
+          data: [15, 8, 3],
+          backgroundColor: ['#667eea', '#43e97b', '#f5576c'],
+        }]
+      },
+      options: { plugins: { legend: { display: false } } }
+    });
+    // Fatura Chart
+    new Chart(document.getElementById('faturaChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Atia Yazılım', 'Beta Ltd.', 'Gamma A.Ş.'],
+        datasets: [{
+          data: [12000, 8500, 4200],
+          backgroundColor: ['#764ba2', '#43e97b', '#f093fb'],
+        }]
+      },
+      options: { plugins: { legend: { position: 'bottom' } } }
+    });
+    // Toplam Gelir/Gider Mini Grafik
+    new Chart(document.getElementById('gelirGiderChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Gelir', 'Gider'],
+        datasets: [{
+          label: 'Tutar',
+          data: [12000, 7000],
+          backgroundColor: ['#43e97b', '#f5576c'],
         }]
       },
       options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } }
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
       }
     });
-
-    // Form submit işlemi
-    document.getElementById('veriForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const ayIndex = parseInt(document.getElementById('aySec').value);
-      const yeniGelir = parseInt(document.getElementById('gelirInput').value);
-      const yeniGider = parseInt(document.getElementById('giderInput').value);
-
-      allGelir[ayIndex] = yeniGelir;
-      allGider[ayIndex] = yeniGider;
-
-      // Mevcut filtreye göre grafiği güncelle
-      const [start, end] = document.getElementById('monthRange').value.split('-').map(Number);
-      drawBarChart(start, end);
+    // Tema geçişi (dark/light)
+    document.getElementById('themeToggle').addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      this.querySelector('i').classList.toggle('fa-moon');
+      this.querySelector('i').classList.toggle('fa-sun');
+    });
+    // Kart başlıklarına ikon ekle (örnek)
+    document.querySelectorAll('.dashboard-card h5').forEach(function(h5) {
+      if(!h5.querySelector('.card-icon')) {
+        let icon = document.createElement('i');
+        icon.className = 'card-icon fas fa-circle';
+        if(h5.textContent.includes('Cari')) icon.className = 'card-icon fas fa-users';
+        if(h5.textContent.includes('Alacak')) icon.className = 'card-icon fas fa-arrow-down';
+        if(h5.textContent.includes('Borç')) icon.className = 'card-icon fas fa-arrow-up';
+        if(h5.textContent.includes('Tahsilat')) icon.className = 'card-icon fas fa-file-invoice';
+        if(h5.textContent.includes('Stok')) icon.className = 'card-icon fas fa-boxes';
+        if(h5.textContent.includes('Fatura')) icon.className = 'card-icon fas fa-file-invoice-dollar';
+        if(h5.textContent.includes('Gelir')) icon.className = 'card-icon fas fa-coins';
+        if(h5.textContent.includes('Gider')) icon.className = 'card-icon fas fa-money-bill-wave';
+        if(h5.textContent.includes('Kritik')) icon.className = 'card-icon fas fa-exclamation-triangle';
+        if(h5.textContent.includes('Uyarı')) icon.className = 'card-icon fas fa-bell';
+        h5.prepend(icon);
+      }
     });
   </script>
 </body>
-</html>
+</html> 
