@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 $host = 'localhost';
 $dbname = 'master_db';
 $user = 'root';
-$pass = '';
+$pass = 'akdere';
 
 try {
     $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);

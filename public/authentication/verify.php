@@ -1,5 +1,5 @@
 <?php
-// Veritabanı bağlantısı aynı sign_up.php'deki gibi
+
 $host = 'localhost';
 $db   = 'master_db';
 $user = 'root';
