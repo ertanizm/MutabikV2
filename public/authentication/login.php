@@ -56,7 +56,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button type="submit">Giriş Yap</button>
   </form>
 
-  <p class="login-link">Hesabın yok mu? <a href="sign_up.php">Kayıt Ol</a></p>
+  
+    <p class="login-link">Hesabın yok mu? <a href="sign_up.php">Kayıt Ol</a></p>
+    <p class="login-link"><a href="forgot_password.php">Şifreni mi unuttun?</a></p>
+
+
+  
 </div>
 
 
