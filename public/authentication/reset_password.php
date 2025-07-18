@@ -31,17 +31,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $stmt->get_result();
 
         echo "<pre>";
-        echo "POST gelen token: [" . $token . "]<br>";
+        // echo "POST gelen token: [" . $token . "]<br>";
 
         if ($result->num_rows === 1) {
             $row = $result->fetch_assoc();
-            echo "DB'deki token: [" . $row['reset_token'] . "]<br>";
-            echo "Expire: " . $row['reset_token_expire'] . "<br>";
-            echo "MySQL NOW(): " . $row['now_time'] . "<br>";
+            // echo "DB'deki token: [" . $row['reset_token'] . "]<br>";
+            // echo "Expire: " . $row['reset_token_expire'] . "<br>";
+            // echo "MySQL NOW(): " . $row['now_time'] . "<br>";
 
             // Zaman karşılaştırması
             if ($row['reset_token_expire'] > $row['now_time']) {
-                echo "<span style='color:green;'>Token süresi geçerli.</span><br>";
+                // echo "<span style='color:green;'>Token süresi geçerli.</span><br>";
 
                 // Şifreyi güncelle
                 $hashed = password_hash($new_password, PASSWORD_DEFAULT);
