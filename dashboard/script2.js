@@ -1,7 +1,9 @@
 // Sidebar toggle for mobile
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('show');
+    if (sidebar) {
+        sidebar.classList.toggle('show');
+    }
 }
 
 // Close sidebar when clicking outside on mobile
@@ -9,69 +11,179 @@ document.addEventListener('click', function(event) {
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.querySelector('.sidebar-toggle');
     
+    // Check if elements exist to prevent errors if they are not in the DOM (e.g. during testing)
     if (window.innerWidth <= 768) {
-        if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+        if (sidebar && sidebarToggle && !sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
             sidebar.classList.remove('show');
         }
     }
 });
 
-// Menu item click handler
-document.querySelectorAll('.menu-item').forEach(item => {
+/**
+ * Menüdeki tüm aktif sınıfları ve açık alt menüleri temizler.
+ * Toggle ikonlarını başlangıç durumuna getirir.
+ */
+function resetMenuState() {
+    // Tüm menu-item ve submenu-item'lardan 'active' sınıfını kaldır
+    document.querySelectorAll('.menu-item, .submenu-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // Tüm alt menüleri gizle
+    document.querySelectorAll('.submenu').forEach(submenu => {
+        submenu.style.display = 'none';
+        // İlişkili menu-toggle'ın ikonunu aşağı çevir ve kendi aktifliğini kaldır
+        const parentToggle = submenu.previousElementSibling;
+        if (parentToggle && parentToggle.classList.contains('menu-toggle')) {
+            parentToggle.classList.remove('active'); // Üst başlığın kendi aktifliğini de kaldır
+            const toggleIcon = parentToggle.querySelector('.toggle-icon');
+            if (toggleIcon) {
+                toggleIcon.classList.remove('fa-chevron-up');
+                toggleIcon.classList.add('fa-chevron-down');
+            }
+        }
+    });
+}
+
+/**
+ * Belirtilen bir menü öğesini aktif yapar ve bağlı olduğu tüm üst alt menüleri açar.
+ * @param {HTMLElement} targetElement - Aktif yapılacak menü öğesi (<a> etiketi veya <div>.menu-toggle).
+ */
+function activateMenuItemAndParents(targetElement) {
+    // Önce tüm aktiflikleri ve açık menüleri temizle
+    // Ancak bu fonksiyon genellikle sadece bir öğeyi aktif ederken çağrılmalı.
+    // Eğer tüm menü state'ini sıfırlamak istiyorsak, bu fonksiyon dışında çağrılmalı.
+    // Burada sadece targetElement'ın ve parent'larının aktifliğini yönetiyoruz.
+    
+    // Tıklanan öğeyi veya mevcut sayfanın öğesini aktif yap
+    if (targetElement) {
+        targetElement.classList.add('active');
+
+        // Eğer bir alt menü öğesiyse veya alt menü başlığı ise
+        let currentParent = targetElement.closest('.submenu');
+        while (currentParent) {
+            currentParent.style.display = 'block'; // Alt menüyü göster
+            const parentToggle = currentParent.previousElementSibling;
+            if (parentToggle && parentToggle.classList.contains('menu-toggle')) {
+                parentToggle.classList.add('active'); // Üst başlığı da aktif göster
+                const toggleIcon = parentToggle.querySelector('.toggle-icon');
+                if (toggleIcon) {
+                    toggleIcon.classList.remove('fa-chevron-down');
+                    toggleIcon.classList.add('fa-chevron-up');
+                }
+            }
+            currentParent = currentParent.parentElement.closest('.submenu'); // Bir üst alt menüye geç
+        }
+    }
+}
+
+
+// Tüm menü öğeleri için tıklama dinleyicisi
+document.querySelectorAll('.menu-item, .submenu-item').forEach(item => {
     item.addEventListener('click', function(e) {
-        // Sadece `.menu-toggle` sınıfına sahip olmayanlar için `e.preventDefault()` çağrılmalı
-        // Çünkü `.menu-toggle` zaten kendi preventDefault'unu çağırıyor
-        if (!this.classList.contains('menu-toggle')) {
-            e.preventDefault();
-        }
-        
-        // Remove active class from all menu items
-        document.querySelectorAll('.menu-item').forEach(menuItem => {
-            menuItem.classList.remove('active');
-        });
-        
-        // Add active class to clicked item
-        this.classList.add('active');
-        
-        // Close sidebar on mobile after menu selection
-        if (window.innerWidth <= 768) {
-            document.getElementById('sidebar').classList.remove('show');
+        // Eğer tıklanan öğe bir alt menü başlığı (menu-toggle) ise
+        if (this.classList.contains('menu-toggle')) {
+            e.preventDefault(); // Bağlantı davranışını engelle (sayfa geçişi yapma)
+
+            const submenu = this.nextElementSibling;
+            const toggleIcon = this.querySelector('.toggle-icon');
+
+            // Sadece bu alt menüyü aç/kapa
+            if (submenu.style.display === 'block') {
+                submenu.style.display = 'none';
+                this.classList.remove('active'); // Kendini deaktif yap
+                if (toggleIcon) {
+                    toggleIcon.classList.remove('fa-chevron-up');
+                    toggleIcon.classList.add('fa-chevron-down');
+                }
+            } else {
+                // Diğer açık alt menüleri kapat (yalnızca menu-toggle olanları)
+                document.querySelectorAll('.submenu').forEach(otherSubmenu => {
+                    if (otherSubmenu !== submenu) {
+                        otherSubmenu.style.display = 'none';
+                        const otherToggle = otherSubmenu.previousElementSibling;
+                        if (otherToggle && otherToggle.classList.contains('menu-toggle')) {
+                            otherToggle.classList.remove('active');
+                            const otherToggleIcon = otherToggle.querySelector('.toggle-icon');
+                            if (otherToggleIcon) {
+                                otherToggleIcon.classList.remove('fa-chevron-up');
+                                otherToggleIcon.classList.add('fa-chevron-down');
+                            }
+                        }
+                    }
+                });
+
+                submenu.style.display = 'block'; // Bu alt menüyü aç
+                this.classList.add('active'); // Kendini aktif yap
+                if (toggleIcon) {
+                    toggleIcon.classList.remove('fa-chevron-down');
+                    toggleIcon.classList.add('fa-chevron-up');
+                }
+            }
+        } else {
+            // Normal bir bağlantı menü öğesi veya alt menü öğesi ise (sayfa değiştirecek)
+            // Sayfa geçişi yapacağımız için e.preventDefault() kullanmıyoruz.
+            // Ama aktifliği ayarlamak için önce resetleyip sonra aktifleştiriyoruz.
+            resetMenuState(); // Sayfa değişimi öncesi tüm menüyü sıfırla
+            // activateMenuItemAndParents(this); // Bu satırı kaldırdık, çünkü sayfa zaten yeniden yüklenecek ve DOMContentLoaded halledecek.
+
+            // Close sidebar on mobile after menu selection, but ideally this should happen on page load of the new page
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.classList.remove('show');
+                }
+            }
         }
     });
 });
 
-// Submenu toggle handler
-document.querySelectorAll('.menu-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function(e) {
-        e.preventDefault(); // Varsayılan bağlantı davranışını engeller
-        const submenu = this.nextElementSibling;
-        const toggleIcon = this.querySelector('.toggle-icon');
 
-        // Toggle submenu visibility
-        // Bu kısım, alt menünün mevcut görünürlüğüne göre açıp kapatır
-        submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+// Sayfa yüklendiğinde mevcut URL'ye göre menü öğesini aktif yap
+window.addEventListener('DOMContentLoaded', function() {
+    const currentPathname = window.location.pathname.split('/').pop(); // Sadece dosya adını al (e.g., "musteriler.php")
 
-        // Toggle arrow icon
-        toggleIcon.classList.toggle('fa-chevron-down');
-        toggleIcon.classList.toggle('fa-chevron-up');
+    // Her sayfa yüklendiğinde menü durumunu tamamen sıfırla
+    resetMenuState();
+
+    let foundActive = false;
+
+    // Tüm menü öğelerini (hem ana hem de alt menü) döngüye al
+    document.querySelectorAll('.menu-item, .submenu-item').forEach(item => {
+        const href = item.getAttribute('href');
+        // Eğer href varsa ve dosya adı mevcut URL'nin dosya adıyla eşleşiyorsa
+        if (href && href.split('/').pop() === currentPathname) {
+            // Bu öğe mevcut sayfayı temsil ediyor, onu ve üst menülerini aktif yap
+            activateMenuItemAndParents(item);
+            foundActive = true;
+            // Mobil ise sidebar'ı kapat (sayfa yüklendiğinde)
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) sidebar.classList.remove('show');
+            }
+            // Doğru öğeyi bulduğumuz için diğerlerine bakmaya gerek yok
+            // (forEach içinde return; döngüyü tamamen kırmaz ama mevcut iterasyonu sonlandırır, bu yüzden 'foundActive' gerekli)
+        }
     });
+
+    // Eğer hiçbir öğe aktif bulunamazsa ve anasayfadaysak (veya direkt domaindeysek), dashboard'u aktif yap
+    if (!foundActive && (currentPathname === '' || currentPathname === 'dashboard2.php' || currentPathname === 'index.php')) {
+        const dashboardLink = document.querySelector('a[href="dashboard2.php"]');
+        if (dashboardLink) {
+            activateMenuItemAndParents(dashboardLink);
+        }
+    }
 });
+
 
 // Animate progress rings on page load
 window.addEventListener('load', function() {
     const progressRings = document.querySelectorAll('.progress-ring .progress');
     progressRings.forEach(ring => {
-        // Stildeki başlangıç değeri 251.2 olduğundan, geçişi sağlamak için başlangıçta sıfıra ayarlayıp sonra hedef değere geri dönüyoruz.
-        // Eğer halka başlangıçta tam doluysa (stroke-dashoffset 0), o zaman başlangıç değeri 251.2 olmalıdır.
-        // Eğer başlangıç değeri 0 ise ve tam dolu göstermek istiyorsak, 0'a çekmeliyiz.
-        // Mevcut kodunuzda halkalar başlangıçta 0'a ayarlı ve sonra 0 olarak kalıyor.
-        // Animasyon için bir hedef belirleyelim.
-        const targetOffset = ring.style.strokeDashoffset === '0' ? '0' : '251.2'; // Eğer başlangıç 0 ise 0 kalsın, yoksa 251.2'ye gitsin
-
-        ring.style.strokeDashoffset = '251.2'; // Başlangıç pozisyonu (tamamen gizli)
-
+        const targetOffset = ring.style.strokeDashoffset === '0' ? '0' : '251.2'; 
+        ring.style.strokeDashoffset = '251.2'; // Start hidden
         setTimeout(() => {
-            ring.style.strokeDashoffset = targetOffset; // Hedef pozisyona geçiş
-        }, 100); // Küçük bir gecikme ile animasyonu başlat
+            ring.style.strokeDashoffset = targetOffset; // Animate to target
+        }, 100); 
     });
 });
