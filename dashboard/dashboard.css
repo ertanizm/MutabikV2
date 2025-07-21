@@ -49,6 +49,64 @@ body {
     }
 }
 
+/* --- Sidebar Collapsed Styles --- */
+.sidebar.collapsed {
+    width: 60px;
+    transition: width 0.3s;
+}
+.sidebar.collapsed .sidebar-header .logo span,
+.sidebar.collapsed .sidebar-header .logo {
+    font-size: 0;
+}
+.sidebar.collapsed .sidebar-header .logo i {
+    margin-right: 0;
+    font-size: 28px;
+}
+.sidebar.collapsed .menu-item,
+.sidebar.collapsed .submenu-item,
+.sidebar.collapsed .menu-toggle {
+    justify-content: center;
+    padding: 12px 0;
+}
+.sidebar.collapsed .menu-item i,
+.sidebar.collapsed .submenu-item i,
+.sidebar.collapsed .menu-toggle i {
+    margin-right: 0;
+    width: 100%;
+    text-align: center;
+}
+.sidebar.collapsed .menu-item span,
+.sidebar.collapsed .submenu-item span,
+.sidebar.collapsed .menu-toggle span,
+.sidebar.collapsed .menu-item:not(:has(i)),
+.sidebar.collapsed .submenu-item:not(:has(i)),
+.sidebar.collapsed .menu-toggle:not(:has(i)) {
+    display: none !important;
+}
+.sidebar.collapsed .menu-item,
+.sidebar.collapsed .submenu-item,
+.sidebar.collapsed .menu-toggle {
+    font-size: 0;
+}
+.sidebar.collapsed .menu-item i,
+.sidebar.collapsed .submenu-item i,
+.sidebar.collapsed .menu-toggle i {
+    font-size: 20px;
+}
+.sidebar.collapsed .submenu {
+    padding-left: 0;
+    border: none;
+}
+.sidebar.collapsed .menu-section {
+    margin-bottom: 0;
+}
+.main-content {
+    transition: margin-left 0.3s;
+}
+.sidebar.collapsed ~ .main-content {
+    margin-left: 60px;
+}
+
 .sidebar-header {
     text-align: center;
     margin-bottom: 30px;

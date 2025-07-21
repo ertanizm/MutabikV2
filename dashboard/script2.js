@@ -1,10 +1,76 @@
-// Sidebar toggle for mobile
+// Sidebar toggle for mobile ve masaüstü (menüyü sakla)
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
-        sidebar.classList.toggle('show');
+        sidebar.classList.toggle('collapsed');
     }
 }
+
+// DOM yüklendiğinde butonlara event ekle
+window.addEventListener('DOMContentLoaded', function() {
+    const collapseBtn = document.getElementById('sidebar-collapse-btn');
+    if (collapseBtn) {
+        collapseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleSidebar();
+        });
+    }
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleSidebar();
+        });
+    }
+
+    // Menüde sadece bir submenu açık olsun
+    document.querySelectorAll('.menu-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Tüm submenu'leri kapat ve tüm menu-toggle'lardan active class'ını kaldır
+            document.querySelectorAll('.submenu').forEach(sm => {
+                sm.style.display = 'none';
+            });
+            document.querySelectorAll('.menu-toggle').forEach(mt => {
+                mt.classList.remove('active');
+                const icon = mt.querySelector('.toggle-icon');
+                if (icon) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+            // Sadece tıklanan submenu'yi aç/kapa
+            const submenu = this.nextElementSibling;
+            if (submenu.style.display === 'block') {
+                submenu.style.display = 'none';
+                this.classList.remove('active');
+            } else {
+                submenu.style.display = 'block';
+                this.classList.add('active');
+                const toggleIcon = this.querySelector('.toggle-icon');
+                if (toggleIcon) {
+                    toggleIcon.classList.remove('fa-chevron-down');
+                    toggleIcon.classList.add('fa-chevron-up');
+                }
+            }
+        });
+    });
+
+    // Sayfa yüklendiğinde sadece aktif olan submenu açık kalsın, diğerleri kapalı olsun
+    setTimeout(function() {
+        let anyOpen = false;
+        document.querySelectorAll('.menu-toggle').forEach(mt => {
+            const submenu = mt.nextElementSibling;
+            if (mt.classList.contains('active') && submenu) {
+                submenu.style.display = 'block';
+                anyOpen = true;
+            } else if (submenu) {
+                submenu.style.display = 'none';
+            }
+        });
+        // Eğer hiçbiri aktif değilse, hepsi kapalı kalsın
+    }, 0);
+});
 
 // Close sidebar when clicking outside on mobile
 document.addEventListener('click', function(event) {
@@ -173,6 +239,43 @@ window.addEventListener('DOMContentLoaded', function() {
             activateMenuItemAndParents(dashboardLink);
         }
     }
+});
+
+// Profil dropdown ve widget aç/kapa
+window.addEventListener('DOMContentLoaded', function() {
+    const userInfo = document.getElementById('userInfo');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileWidget = document.getElementById('profileWidget');
+    const openProfileWidgetBtn = document.getElementById('openProfileWidget');
+
+    if (userInfo && profileDropdown) {
+        userInfo.addEventListener('click', function(e) {
+            // Sadece dropdown'ı aç/kapa
+            if (profileDropdown.style.display === 'block') {
+                profileDropdown.style.display = 'none';
+            } else {
+                profileDropdown.style.display = 'block';
+                if (profileWidget) profileWidget.style.display = 'none';
+            }
+            e.stopPropagation();
+        });
+    }
+    if (openProfileWidgetBtn && profileWidget && profileDropdown) {
+        openProfileWidgetBtn.addEventListener('click', function(e) {
+            profileDropdown.style.display = 'none';
+            profileWidget.style.display = 'block';
+            e.stopPropagation();
+        });
+    }
+    // Dışarı tıklanınca kapat
+    document.addEventListener('click', function(e) {
+        if (profileDropdown && !userInfo.contains(e.target)) {
+            profileDropdown.style.display = 'none';
+        }
+        if (profileWidget && !profileWidget.contains(e.target) && e.target !== openProfileWidgetBtn) {
+            profileWidget.style.display = 'none';
+        }
+    });
 });
 
 

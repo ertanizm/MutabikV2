@@ -161,175 +161,14 @@ $today = date('d.m.Y');
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <i class="fas fa-calculator"></i>
-                Mutabık
-            </div>
-        </div>
-        <div class="sidebar-menu">
-            <a href="/MutabikV2/dashboard/dashboard2.php" class="menu-item">
-                <i class="fas fa-chart-line"></i>
-                Güncel Durum
-            </a>
-            <div class="menu-section">
-                <div class="menu-item menu-toggle active">
-                    <i class="fas fa-arrow-down"></i>
-                    SATIŞLAR
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu">
-                    <a href="../teklifler/teklifler.php" class="submenu-item">
-                        <i class="fas fa-file-alt"></i>
-                        Teklifler
-                    </a>
-                    <a href="../faturalar/faturalar.php" class="submenu-item active">
-                        <i class="fas fa-file-invoice"></i>
-                        Faturalar
-                    </a>
-                    <a href="../musteriler/musteriler.php" class="submenu-item">
-                        <i class="fas fa-users"></i>
-                        Müşteriler
-                    </a>
-                    <a href="../satislar_raporu/satis_rapor.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Satışlar Raporu
-                    </a>
-                    <a href="../tahsilatlar_raporu/tahsilat_rapor.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Tahsilatlar Raporu
-                    </a>
-                    <a href="../gelir_gider_raporu/gelir-gider.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Gelir Gider Raporu
-                    </a>
-                </div>
-            </div>
-            <div class="menu-section">
-                <div class="menu-item menu-toggle">
-                    <i class="fas fa-arrow-up"></i>
-                    GİDERLER
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" style="display: none;">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-file-alt"></i>
-                        Gider Listesi
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Tedarikçiler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-user-tie"></i>
-                        Çalışanlar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Giderler Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Ödemeler Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        KDV Raporu
-                    </a>
-                </div>
-            </div>
-            <div class="menu-section">
-                <div class="menu-item menu-toggle">
-                    <i class="fas fa-money-bill-wave"></i>
-                    NAKİT
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="cash-submenu">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-university"></i>
-                        Kasa ve Bankalar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        Çekler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Kasa / Banka Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Nakit Akışı Raporu
-                    </a>
-                </div>
-            </div>
-            <div class="menu-section">
-                <div class="menu-item menu-toggle">
-                    <i class="fas fa-boxes"></i>
-                    STOK
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="stock-submenu">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-tags"></i>
-                        Hizmet ve Ürünler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Depolar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-exchange-alt"></i>
-                        Depolar Arası Transfer
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Giden İrsaliyeler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck fa-flip-horizontal"></i>
-                        Gelen İrsaliyeler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-list"></i>
-                        Fiyat Listeleri
-                    </a>
-                </div>
-            </div>
-            <div class="menu-separator"></div>
-            <a href="#" class="menu-item">
-                <i class="fas fa-star"></i>
-                Uygulamalar
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-shopping-cart"></i>
-                Pazaryeri
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-chevron-left"></i>
-                Menüyü Sakla
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-cog"></i>
-                Ayarlar
-            </a>
-        </div>
-    </div>
+    <?php include __DIR__ . '/../../sidebar.php'; ?>
     <div class="main-content">
         <div class="top-header">
             <div class="header-left">
                 <h1>Yeni Fatura</h1>
             </div>
             <div class="header-right">
-                <a href="faturalar/faturalar.php" class="btn-secondary">VAZGEÇ</a>
-                <div class="dropdown">
-                    <a href="#" class="btn-primary" id="saveBtn">KAYDET</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" id="saveAndAddBtn">KAYDET VE YENİ EKLE</a>
-                    </div>
-                </div>
+                <?php include __DIR__ . '/../../includes/profile_dropdown.php'; ?>
             </div>
         </div>
         <div class="form-container d-flex flex-wrap">
@@ -339,7 +178,7 @@ $today = date('d.m.Y');
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-file-alt"></i>
-                            FATURA İSMİ
+                            <span>FATURA İSMİ</span>
                         </label>
                         <input type="text" class="form-control" id="faturaIsmi" placeholder="Fatura ismi giriniz">
                     </div>
@@ -349,7 +188,7 @@ $today = date('d.m.Y');
                     <div class="form-group">
                         <label class="form-label">
                             <i class="fas fa-building"></i>
-                            MÜŞTERİ
+                            <span>MÜŞTERİ</span>
                         </label>
                         <div class="input-with-icon">
                             <input type="text" class="form-control" id="musteri" placeholder="Müşteri adı giriniz">
@@ -357,7 +196,7 @@ $today = date('d.m.Y');
                         </div>
                         <div class="form-hint">
                             <i class="fas fa-info-circle"></i>
-                            Kayıtlı bir müşteri seçebilir veya yeni bir müşteri ismi yazabilirsiniz.
+                            <span>Kayıtlı bir müşteri seçebilir veya yeni bir müşteri ismi yazabilirsiniz.</span>
                         </div>
                     </div>
                     <div class="customer-info">
@@ -368,7 +207,7 @@ $today = date('d.m.Y');
                 <!-- Tahsilat Durumu -->
                 <div class="form-section">
                     <div class="form-group">
-                        <label class="form-label"><i class="fas fa-question-circle"></i>TAHSİLAT DURUMU</label>
+                        <label class="form-label"><i class="fas fa-question-circle"></i><span>TAHSİLAT DURUMU</span></label>
                         <div style="display: flex; gap: 0;">
                             <label style="flex:1; display:flex; align-items:center; background:#fafbfc; border:1px solid var(--border-color); border-radius:6px 0 0 6px; padding:12px 16px; cursor:pointer; font-weight:600;">
                                 <input type="radio" name="tahsilat" checked style="margin-right:10px;">TAHSİL EDİLECEK
@@ -384,7 +223,7 @@ $today = date('d.m.Y');
                     <div class="date-section">
                         <div class="date-group">
                             <div class="form-group">
-                                <label class="form-label"><i class="fas fa-calendar"></i>DÜZENLEME TARİHİ</label>
+                                <label class="form-label"><i class="fas fa-calendar"></i><span>DÜZENLEME TARİHİ</span></label>
                                 <div class="input-with-icon">
                                     <input type="text" class="form-control" id="duzenlemeTarihi" value="<?php echo $today; ?>">
                                     <i class="fas fa-calendar"></i>
@@ -393,7 +232,7 @@ $today = date('d.m.Y');
                         </div>
                         <div class="date-group">
                             <div class="form-group">
-                                <label class="form-label"><i class="fas fa-bell"></i>VADE TARİHİ</label>
+                                <label class="form-label"><i class="fas fa-bell"></i><span>VADE TARİHİ</span></label>
                                 <div class="quick-date-buttons">
                                     <button type="button" class="quick-date-btn active" data-days="0">AYNI GÜN</button>
                                     <button type="button" class="quick-date-btn" data-days="7">7 GÜN</button>
@@ -409,14 +248,14 @@ $today = date('d.m.Y');
                         </div>
                     </div>
                     <div class="action-buttons">
-                        <button type="button" class="btn-outline"><i class="fas fa-plus"></i>FATURA NO EKLE</button>
-                        <button type="button" class="btn-outline"><i class="fas fa-lira-sign"></i>DÖVİZ DEĞİŞTİR</button>
-                        <button type="button" class="btn-outline"><i class="fas fa-plus"></i>SİPARİŞ BİLGİSİ EKLE</button>
+                        <button type="button" class="btn-outline"><i class="fas fa-plus"></i><span>FATURA NO EKLE</span></button>
+                        <button type="button" class="btn-outline"><i class="fas fa-lira-sign"></i><span>DÖVİZ DEĞİŞTİR</span></button>
+                        <button type="button" class="btn-outline"><i class="fas fa-plus"></i><span>SİPARİŞ BİLGİSİ EKLE</span></button>
                     </div>
                 </div>
                 <!-- Stok Takibi -->
                 <div class="form-section">
-                    <label class="form-label"><i class="fas fa-layer-group"></i>STOK TAKİBİ</label>
+                    <label class="form-label"><i class="fas fa-layer-group"></i><span>STOK TAKİBİ</span></label>
                     <div style="display:flex; gap:0; max-width:700px;">
                         <label style="flex:1; display:flex; align-items:flex-start; background:#fafbfc; border:1px solid var(--border-color); border-radius:6px 0 0 6px; padding:16px 18px; cursor:pointer; font-weight:600;">
                             <input type="radio" name="stok" checked style="margin-right:10px; margin-top:3px;">STOK ÇIKIŞI YAPILSIN
@@ -455,7 +294,7 @@ $today = date('d.m.Y');
                             </tr>
                         </tbody>
                     </table>
-                    <button type="button" class="btn-add-row" id="addRowBtn"><i class="fas fa-plus"></i> YENİ SATIR EKLE</button>
+                    <button type="button" class="btn-add-row" id="addRowBtn"><i class="fas fa-plus"></i><span> YENİ SATIR EKLE</span></button>
                     <div class="profit-info">Toplam Kâr: -</div>
                 </div>
                 <!-- Totals -->
@@ -470,12 +309,12 @@ $today = date('d.m.Y');
             <!-- Sağ Panel: Kategori ve Etiketler -->
             <div class="right-panel">
                 <div class="panel-group">
-                    <div class="panel-title"><i class="fas fa-folder"></i>FATURA KATEGORİSİ</div>
+                    <div class="panel-title"><i class="fas fa-folder"></i><span>FATURA KATEGORİSİ</span></div>
                     <select><option>KATEGORİSİZ</option></select>
                     <div class="panel-hint">Faturaların kategorilere göre dağılımını satışlar raporunda takip edebilirsiniz.</div>
                 </div>
                 <div class="panel-group">
-                    <div class="panel-title"><i class="fas fa-tags"></i>ETİKETLERİ</div>
+                    <div class="panel-title"><i class="fas fa-tags"></i><span>ETİKETLERİ</span></div>
                     <select><option>ETİKETSİZ</option></select>
                     <div class="panel-hint">Etiketler Gelir Gider Raporunda etiket bazında karlılığınızı görmenizi sağlar.</div>
                 </div>
@@ -537,7 +376,7 @@ $today = date('d.m.Y');
 <div id="profileDropdown" class="profile-dropdown">
     <ul>
         <li><button type="button" id="openProfileWidget">Profilim</button></li>
-        <li><a href="/MutabikV2/public/authentication/login.php" id="logoutBtn">Çıkış Yap</a></li>
+        <li><a href="#" id="logoutBtn">Çıkış Yap</a></li>
     </ul>
 </div>
 <div id="profileWidget" class="profile-widget">
@@ -548,113 +387,7 @@ $today = date('d.m.Y');
     <div class="profile-row"><i class="fas fa-phone"></i><span class="profile-label">Telefon:</span><span class="profile-value"><?php echo isset($userPhone) ? htmlspecialchars($userPhone) : '-'; ?></span></div>
     <div class="profile-row"><i class="fas fa-briefcase"></i><span class="profile-label">Unvan:</span><span class="profile-value"><?php echo htmlspecialchars($companyName); ?></span></div>
 </div>
-<script>
-// Profil dropdown aç/kapa
-const userInfo = document.querySelector('.user-info');
-const profileDropdown = document.getElementById('profileDropdown');
-const profileWidget = document.getElementById('profileWidget');
-const openProfileWidgetBtn = document.getElementById('openProfileWidget');
-
-document.addEventListener('click', function(e) {
-    if (userInfo && userInfo.contains(e.target)) {
-        profileDropdown.classList.toggle('active');
-    } else if (profileDropdown && !profileDropdown.contains(e.target) && !userInfo.contains(e.target)) {
-        profileDropdown.classList.remove('active');
-    }
-    if (profileWidget && !profileWidget.contains(e.target) && e.target !== openProfileWidgetBtn) {
-        profileWidget.classList.remove('active');
-    }
-});
-if (openProfileWidgetBtn) {
-    openProfileWidgetBtn.onclick = function() {
-        profileDropdown.classList.remove('active');
-        profileWidget.classList.add('active');
-    };
-}
-</script>
-<!-- PROFIL DROPDOWN & WIDGET BİTİŞ -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Menu toggle functionality
-        document.querySelectorAll('.menu-toggle').forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const submenu = this.nextElementSibling;
-                const toggleIcon = this.querySelector('.toggle-icon');
-                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-                toggleIcon.classList.toggle('fa-chevron-down');
-                toggleIcon.classList.toggle('fa-chevron-up');
-            });
-        });
-        // Quick date buttons
-        document.querySelectorAll('.quick-date-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.quick-date-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const days = parseInt(this.dataset.days);
-                const today = new Date();
-                const targetDate = new Date(today);
-                targetDate.setDate(today.getDate() + days);
-                const day = String(targetDate.getDate()).padStart(2, '0');
-                const month = String(targetDate.getMonth() + 1).padStart(2, '0');
-                const year = targetDate.getFullYear();
-                document.getElementById('vadeTarihi').value = `${day}.${month}.${year}`;
-            });
-        });
-        // Add new row
-        document.getElementById('addRowBtn').addEventListener('click', function() {
-            const tbody = document.getElementById('productsTableBody');
-            const newRow = document.createElement('tr');
-            newRow.className = 'product-row';
-            newRow.innerHTML = `
-                <td><div class="input-with-icon"><input type="text" class="form-control" placeholder="Ürün/Hizmet adı"><i class="fas fa-search"></i></div></td>
-                <td><input type="number" class="quantity-input" value="1.00" step="0.01" min="0"></td>
-                <td><select class="unit-select"><option>Adet</option><option>Kg</option><option>Metre</option><option>Saat</option><option>Gün</option></select></td>
-                <td><input type="number" class="price-input" value="0.00" step="0.01" min="0"><span style="margin-left: 5px;">₺</span></td>
-                <td><select class="tax-select"><option>KDV %20</option><option>KDV %10</option><option>KDV %8</option><option>KDV %1</option><option>KDV %0</option></select></td>
-                <td class="total-cell">0,00 ₺</td>
-                <td class="action-buttons-cell"><button type="button" class="btn-icon"><i class="fas fa-plus"></i></button><button type="button" class="btn-icon"><i class="fas fa-times"></i></button></td>
-            `;
-            tbody.appendChild(newRow);
-        });
-        // Calculate totals
-        function calculateTotals() {
-            let subtotal = 0;
-            let totalVat = 0;
-            document.querySelectorAll('.product-row').forEach(row => {
-                const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
-                const price = parseFloat(row.querySelector('.price-input').value) || 0;
-                const lineTotal = quantity * price;
-                const vat = lineTotal * 0.20;
-                subtotal += lineTotal;
-                totalVat += vat;
-                row.querySelector('.total-cell').textContent = `${lineTotal.toFixed(2).replace('.', ',')} ₺`;
-            });
-            const grandTotal = subtotal + totalVat;
-            document.querySelector('.totals-table tr:nth-child(1) td:last-child').textContent = `${subtotal.toFixed(2).replace('.', ',')}₺`;
-            document.querySelector('.totals-table tr:nth-child(2) td:last-child').textContent = `${totalVat.toFixed(2).replace('.', ',')}₺`;
-            document.querySelector('.totals-table tr:nth-child(3) td:last-child').textContent = `${grandTotal.toFixed(2).replace('.', ',')}₺`;
-        }
-        document.addEventListener('input', function(e) {
-            if (e.target.classList.contains('quantity-input') || e.target.classList.contains('price-input')) {
-                calculateTotals();
-            }
-        });
-        // Save button
-        document.getElementById('saveBtn').addEventListener('click', function() {
-            alert('Fatura kaydedildi!');
-            window.location.href = 'faturalar/faturalar.php';
-        });
-        // Save and add new button
-        document.getElementById('saveAndAddBtn').addEventListener('click', function() {
-            alert('Fatura kaydedildi ve yeni fatura oluşturuluyor!');
-            document.getElementById('faturaIsmi').value = '';
-            document.getElementById('musteri').value = '';
-            // Reset table
-            document.getElementById('productsTableBody').innerHTML = `<tr class="product-row"><td><div class="input-with-icon"><input type="text" class="form-control" placeholder="Ürün/Hizmet adı"><i class="fas fa-search"></i></div></td><td><input type="number" class="quantity-input" value="1.00" step="0.01" min="0"></td><td><select class="unit-select"><option>Adet</option><option>Kg</option><option>Metre</option><option>Saat</option><option>Gün</option></select></td><td><input type="number" class="price-input" value="0.00" step="0.01" min="0"><span style="margin-left: 5px;">₺</span></td><td><select class="tax-select"><option>KDV %20</option><option>KDV %10</option><option>KDV %8</option><option>KDV %1</option><option>KDV %0</option></select></td><td class="total-cell">0,00 ₺</td><td class="action-buttons-cell"><button type="button" class="btn-icon"><i class="fas fa-plus"></i></button><button type="button" class="btn-icon"><i class="fas fa-times"></i></button></td></tr>`;
-            calculateTotals();
-        });
-        calculateTotals();
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../script2.js"></script>
 </body>
 </html> 

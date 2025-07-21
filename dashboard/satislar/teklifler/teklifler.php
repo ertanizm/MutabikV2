@@ -609,172 +609,7 @@ if (isset($pdo)) {
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <i class="fas fa-calculator"></i>
-                Mutabık
-            </div>
-        </div>
-        
-        <div class="sidebar-menu">
-            <a href="/MutabikV2/dashboard/dashboard2.php" class="menu-item">
-                <i class="fas fa-chart-line"></i>
-                Güncel Durum
-            </a>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle active">
-                    <i class="fas fa-arrow-down"></i>
-                    SATIŞLAR
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu">
-                    <a href="teklifler.php" class="submenu-item active">
-                        <i class="fas fa-file-alt"></i>
-                        Teklifler
-                    </a>
-                    <a href="../faturalar/faturalar.php" class="submenu-item">
-                        <i class="fas fa-file-invoice"></i>
-                        Faturalar
-                    </a>
-                    <a href="../musteriler/musteriler.php" class="submenu-item">
-                        <i class="fas fa-users"></i>
-                        Müşteriler
-                    </a>
-                    <a href="../satislar_raporu/satis_rapor.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Satışlar Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Tahsilatlar Raporu
-                    </a>
-                    <a href="../gelir_gider_raporu/gelir-gider.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Gelir Gider Raporu
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle">
-                    <i class="fas fa-arrow-up"></i>
-                    GİDERLER
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" style="display: none;">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-file-alt"></i>
-                        Gider Listesi
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Tedarikçiler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-user-tie"></i>
-                        Çalışanlar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Giderler Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Ödemeler Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        KDV Raporu
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle">
-                    <i class="fas fa-money-bill-wave"></i>
-                    NAKİT
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" style="display: none;">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-university"></i>
-                        Kasa ve Bankalar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        Çekler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Kasa / Banka Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Nakit Akışı Raporu
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle">
-                    <i class="fas fa-boxes"></i>
-                    STOK
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" style="display: none;">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-tags"></i>
-                        Hizmet ve Ürünler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Depolar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-exchange-alt"></i>
-                        Depolar Arası Transfer
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Giden İrsaliyeler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck fa-flip-horizontal"></i>
-                        Gelen İrsaliyeler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-list"></i>
-                        Fiyat Listeleri
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-separator"></div>
-            
-            <a href="#" class="menu-item">
-                <i class="fas fa-star"></i>
-                Uygulamalar
-            </a>
-            
-            <a href="#" class="menu-item">
-                <i class="fas fa-shopping-cart"></i>
-                Pazaryeri
-            </a>
-            
-            <a href="#" class="menu-item">
-                <i class="fas fa-chevron-left"></i>
-                Menüyü Sakla
-            </a>
-            
-            <a href="#" class="menu-item">
-                <i class="fas fa-cog"></i>
-                Ayarlar
-            </a>
-        </div>
-    </div>
+    <?php include __DIR__ . '/../../sidebar.php'; ?>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -785,18 +620,8 @@ if (isset($pdo)) {
             <div class="header-left">
                 <h1>Teklifler</h1>
             </div>
-            
             <div class="header-right">
-                <div class="user-info">
-                    <div class="user-avatar">
-                        MD
-                    </div>
-                    <div class="user-details">
-                        <h6><?php echo htmlspecialchars($userName); ?></h6>
-                        <small><?php echo htmlspecialchars($companyName); ?></small>
-                    </div>
-                    <i class="fas fa-chevron-down" style="color: var(--text-secondary);"></i>
-                </div>
+                <?php include __DIR__ . '/../../includes/profile_dropdown.php'; ?>
             </div>
         </div>
 
@@ -838,7 +663,7 @@ if (isset($pdo)) {
                     <i class="fas fa-search"></i>
                 </div>
                 
-                <a href="yeni-teklif.php" class="create-btn">YENİ TEKLİF OLUŞTUR</a>
+                <a href="#" class="create-btn">YENİ TEKLİF OLUŞTUR</a>
             </div>
 
             <!-- Table Container -->
@@ -895,7 +720,7 @@ if (isset($pdo)) {
     <div id="profileDropdown" class="profile-dropdown">
         <ul>
             <li><button type="button" id="openProfileWidget">Profilim</button></li>
-            <li><a href="/MutabikV2/public/authentication/login.php" id="logoutBtn">Çıkış Yap</a></li>
+            <li><a href="#" id="logoutBtn">Çıkış Yap</a></li>
         </ul>
     </div>
     <div id="profileWidget" class="profile-widget">
@@ -909,93 +734,6 @@ if (isset($pdo)) {
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Menu toggle functionality
-        document.querySelectorAll('.menu-toggle').forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const submenu = this.nextElementSibling;
-                const toggleIcon = this.querySelector('.toggle-icon');
-
-                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-                toggleIcon.classList.toggle('fa-chevron-down');
-                toggleIcon.classList.toggle('fa-chevron-up');
-            });
-        });
-
-
-
-        // Table sorting functionality
-        let currentSort = {
-            column: null,
-            direction: 'default'
-        };
-
-        document.querySelectorAll('.sortable').forEach(header => {
-            header.addEventListener('click', function() {
-                const column = this.dataset.sort;
-                
-                // Remove previous sort classes
-                document.querySelectorAll('.sortable').forEach(h => {
-                    h.classList.remove('asc', 'desc');
-                });
-
-                // Determine sort direction
-                if (currentSort.column === column) {
-                    if (currentSort.direction === 'default') {
-                        currentSort.direction = 'asc';
-                        this.classList.add('asc');
-                    } else if (currentSort.direction === 'asc') {
-                        currentSort.direction = 'desc';
-                        this.classList.add('desc');
-                    } else {
-                        currentSort.direction = 'default';
-                        // No class added for default
-                    }
-                } else {
-                    currentSort.column = column;
-                    currentSort.direction = 'asc';
-                    this.classList.add('asc');
-                }
-
-                // Here you would typically sort the table data
-                // For now, we'll just show the visual feedback
-                console.log(`Sorting by ${column} in ${currentSort.direction} direction`);
-            });
-        });
-
-        // URL parameter handling for tabs
-        const urlParams = new URLSearchParams(window.location.search);
-        const teklifDurumu = urlParams.get('teklif-durumu');
-        
-        if (teklifDurumu) {
-            // Update page title or other elements based on the status
-            console.log(`Current teklif durumu: ${teklifDurumu}`);
-        }
-    </script>
-    <script>
-        // Profil dropdown aç/kapa
-        const userInfo = document.querySelector('.user-info');
-        const profileDropdown = document.getElementById('profileDropdown');
-        const profileWidget = document.getElementById('profileWidget');
-        const openProfileWidgetBtn = document.getElementById('openProfileWidget');
-
-        document.addEventListener('click', function(e) {
-            if (userInfo && userInfo.contains(e.target)) {
-                profileDropdown.classList.toggle('active');
-            } else if (profileDropdown && !profileDropdown.contains(e.target) && !userInfo.contains(e.target)) {
-                profileDropdown.classList.remove('active');
-            }
-            if (profileWidget && !profileWidget.contains(e.target) && e.target !== openProfileWidgetBtn) {
-                profileWidget.classList.remove('active');
-            }
-        });
-        if (openProfileWidgetBtn) {
-            openProfileWidgetBtn.onclick = function() {
-                profileDropdown.classList.remove('active');
-                profileWidget.classList.add('active');
-            };
-        }
-    </script>
+    <script src="../../script2.js"></script>
 </body>
 </html> 

@@ -179,240 +179,20 @@
     }
 }
 
-.profile-dropdown {
-    position: absolute;
-    top: 60px;
-    right: 25px;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    min-width: 180px;
-    z-index: 2000;
-    display: none;
-}
-.profile-dropdown.active { display: block; }
-.profile-dropdown ul { list-style: none; margin: 0; padding: 0; }
-.profile-dropdown li { border-bottom: 1px solid #f0f0f0; }
-.profile-dropdown li:last-child { border-bottom: none; }
-.profile-dropdown a, .profile-dropdown button {
-    display: block;
-    width: 100%;
-    padding: 12px 18px;
-    background: none;
-    border: none;
-    text-align: left;
-    color: #2c3e50;
-    font-size: 15px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.profile-dropdown a:hover, .profile-dropdown button:hover { background: #f5f5f5; }
-.profile-widget {
-    position: fixed;
-    top: 80px;
-    right: 40px;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-    min-width: 320px;
-    z-index: 3000;
-    display: none;
-    padding: 28px 32px 24px 32px;
-}
-.profile-widget.active { display: block; }
-.profile-widget .profile-title { font-size: 20px; font-weight: bold; margin-bottom: 18px; color: #2c3e50; }
-.profile-widget .profile-row { display: flex; align-items: center; margin-bottom: 12px; }
-.profile-widget .profile-row i { width: 22px; color: #888; margin-right: 10px; }
-.profile-widget .profile-label { font-weight: 500; color: #888; width: 120px; }
-.profile-widget .profile-value { color: #2c3e50; }
-.profile-widget .close-btn { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 20px; color: #888; cursor: pointer; }
-
-
         
     </style>
 </head>
 
 <body>
-    
-    <div class="sidebar" id="sidebar">
-        
-        <div class="sidebar-header">
-            <div class="logo">
-                <i class="fas fa-calculator"></i>
-                Mutabık
-            </div>
-        </div>
-        <div class="sidebar-menu">
-            <a href="/MutabikV2/dashboard/dashboard2.php" class="menu-item">
-                <i class="fas fa-chart-line"></i>
-                Güncel Durum
-            </a>
-
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="sales-submenu">
-                    <i class="fas fa-arrow-down"></i>
-                    SATIŞLAR
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="sales-submenu">
-                    <a href="../teklifler/teklifler.php" class="submenu-item">
-                        <i class="fas fa-file-alt"></i>
-                        Teklifler
-                    </a>
-                    <a href="../faturalar/faturalar.php" class="submenu-item">
-                        <i class="fas fa-file-invoice"></i>
-                        Faturalar
-                    </a>
-                    <a href="../musteriler/musteriler.php" class="submenu-item">
-                        <i class="fas fa-users"></i>
-                        Müşteriler
-                    </a>
-                    <a href="satislar_raporu/satis_rapor.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Satışlar Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Tahsilatlar Raporu
-                    </a>
-                    <a href="../gelir_gider_raporu/gelir-gider.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Gelir Gider Raporu
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="expenses-submenu">
-                    <i class="fas fa-arrow-up"></i>
-                    GİDERLER
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="expenses-submenu">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-file-alt"></i>
-                        Gider Listesi
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Tedarikçiler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-user-tie"></i>
-                        Çalışanlar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Giderler Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Ödemeler Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        KDV Raporu
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="cash-submenu">
-                    <i class="fas fa-money-bill-wave"></i>
-                    NAKİT
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="cash-submenu">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-university"></i>
-                        Kasa ve Bankalar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        Çekler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Kasa / Banka Raporu
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Nakit Akışı Raporu
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="stock-submenu">
-                    <i class="fas fa-boxes"></i>
-                    STOK
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="stock-submenu">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-tags"></i>
-                        Hizmet ve Ürünler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Depolar
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-exchange-alt"></i>
-                        Depolar Arası Transfer
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Giden İrsaliyeler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck fa-flip-horizontal"></i>
-                        Gelen İrsaliyeler
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-list"></i>
-                        Fiyat Listeleri
-                    </a>
-                </div>
-            </div>
-
-            <div class="menu-separator"></div>
-
-            <a href="../../dashboard2.php" class="menu-item">
-                <i class="fas fa-star"></i>
-                Uygulamalar
-            </a>
-
-            <a href="#" class="menu-item">
-                <i class="fas fa-shopping-cart"></i>
-                Pazaryeri
-            </a>
-
-            <a href="#" class="menu-item">
-                <i class="fas fa-chevron-left"></i>
-                Menüyü Sakla
-            </a>
-
-            <a href="#" class="menu-item">
-                <i class="fas fa-cog"></i>
-                Ayarlar
-            </a>
-        </div>
+    <?php include __DIR__ . '/../../sidebar.php'; ?>
+    <div class="top-header">
+    <div class="header-left">
+        <h1>Satışlar Raporu</h1>
     </div>
-    <div class="profile-top-right" style="position: absolute; top: 24px; right: 40px; z-index: 1100;">
-        <div class="header-right">
-            <div class="user-info">
-                <div class="user-avatar">MD</div>
-                <div class="user-details">
-                    <h6>Miraç Deprem</h6>
-                    <small>Deprem Yazılım</small>
-                </div>
-                <i class="fas fa-chevron-down" style="color: var(--text-secondary);"></i>
-            </div>
-        </div>
+    <div class="header-right">
+        <?php include __DIR__ . '/../../includes/profile_dropdown.php'; ?>
     </div>
+</div>
     <div class="main-content">
         <div class="content-area">
             <h1 class="main-title">Satışlar Raporu</h1>
@@ -508,7 +288,7 @@
 <div id="profileDropdown" class="profile-dropdown">
     <ul>
         <li><button type="button" id="openProfileWidget">Profilim</button></li>
-        <li><a href="/MutabikV2/public/authentication/login.php" id="logoutBtn">Çıkış Yap</a></li>
+        <li><a href="#" id="logoutBtn">Çıkış Yap</a></li>
     </ul>
 </div>
 <div id="profileWidget" class="profile-widget">
@@ -544,6 +324,15 @@ if (openProfileWidgetBtn) {
 }
 </script>
 <!-- PROFIL DROPDOWN & WIDGET BİTİŞ -->
+<script>
+// Sidebar collapse/expand
+const sidebar = document.getElementById('sidebar');
+const collapseBtn = document.getElementById('sidebar-collapse-btn');
+collapseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    sidebar.classList.toggle('collapsed');
+});
+</script>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../script2.js"></script>

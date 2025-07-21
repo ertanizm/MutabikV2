@@ -113,194 +113,15 @@
     </style>
 </head>
 <body>
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <i class="fas fa-calculator"></i>
-                Mutabık
-            </div>
-        </div>
-        
-        <div class="sidebar-menu">
-            <a href="/MutabikV2/dashboard/dashboard2.php" class="menu-item">
-                <i class="fas fa-chart-line"></i>
-                Güncel Durum
-            </a>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="sales-submenu">
-                    <i class="fas fa-arrow-down"></i>
-                    SATIŞLAR
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="sales-submenu">
-                    <a href="../teklifler/teklifler.php" class="submenu-item">
-                        <i class="fas fa-file-alt"></i>
-                        Teklifler
-                    </a>
-                    <a href="../faturalar/faturalar.php" class="submenu-item">
-                        <i class="fas fa-file-invoice"></i>
-                        Faturalar
-                    </a>
-                    <a href="../musteriler/musteriler.php" class="submenu-item">
-                        <i class="fas fa-users"></i>
-                        Müşteriler
-                    </a>
-                    <a href="../satislar_raporu/satis_rapor.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Satışlar Raporu
-                    </a>
-                    <a href="reports/tahsilatlar-raporu.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Tahsilatlar Raporu
-                    </a>
-                    <a href="reports/gelir-gider.php" class="submenu-item active">
-                        <i class="fas fa-chart-bar"></i>
-                        Gelir Gider Raporu
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="expenses-submenu">
-                    <i class="fas fa-arrow-up"></i>
-                    GİDERLER
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="expenses-submenu">
-                    <a href="reports/gider-listesi.php" class="submenu-item">
-                        <i class="fas fa-file-alt"></i>
-                        Gider Listesi
-                    </a>
-                    <a href="reports/tedarikci-listesi.php" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Tedarikçiler
-                    </a>
-                    <a href="reports/calisan-listesi.php" class="submenu-item">
-                        <i class="fas fa-user-tie"></i>
-                        Çalışanlar
-                    </a>
-                    <a href="reports/giderler-raporu.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Giderler Raporu
-                    </a>
-                    <a href="reports/odemeler-raporu.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Ödemeler Raporu
-                    </a>
-                    <a href="reports/kdv-raporu.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        KDV Raporu
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="cash-submenu">
-                    <i class="fas fa-money-bill-wave"></i>
-                    NAKİT
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="cash-submenu">
-                    <a href="reports/kasa-banka-raporu.php" class="submenu-item">
-                        <i class="fas fa-university"></i>
-                        Kasa ve Bankalar
-                    </a>
-                    <a href="reports/cekler.php" class="submenu-item">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        Çekler
-                    </a>
-                    <a href="reports/kasa-banka-raporu.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Kasa / Banka Raporu
-                    </a>
-                    <a href="reports/nakit-akisi-raporu.php" class="submenu-item">
-                        <i class="fas fa-chart-bar"></i>
-                        Nakit Akışı Raporu
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="stock-submenu">
-                    <i class="fas fa-boxes"></i>
-                    STOK
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="stock-submenu">
-                    <a href="reports/hizmet-urunler.php" class="submenu-item">
-                        <i class="fas fa-tags"></i>
-                        Hizmet ve Ürünler
-                    </a>
-                    <a href="reports/depolar.php" class="submenu-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Depolar
-                    </a>
-                    <a href="reports/depolar-arasindaki-transfer.php" class="submenu-item">
-                        <i class="fas fa-exchange-alt"></i>
-                        Depolar Arası Transfer
-                    </a>
-                    <a href="reports/giden-irsaliyeler.php" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        Giden İrsaliyeler
-                    </a>
-                    <a href="reports/gelen-irsaliyeler.php" class="submenu-item">
-                        <i class="fas fa-truck fa-flip-horizontal"></i>
-                        Gelen İrsaliyeler
-                    </a>
-                    <a href="reports/fiyat-listeleri.php" class="submenu-item">
-                        <i class="fas fa-list"></i>
-                        Fiyat Listeleri
-                    </a>
-                </div>
-            </div>
-            
-            <div class="menu-separator"></div>
-            
-            <a href="reports/uygulamalar.php" class="menu-item">
-                <i class="fas fa-star"></i>
-                Uygulamalar
-            </a>
-            
-            <a href="reports/pazaryeri.php" class="menu-item">
-                <i class="fas fa-shopping-cart"></i>
-                Pazaryeri
-            </a>
-            
-            <a href="reports/menuyusakla.php" class="menu-item">
-                <i class="fas fa-chevron-left"></i>
-                Menüyü Sakla
-            </a>
-            
-            <a href="reports/ayarlar.php" class="menu-item">
-                <i class="fas fa-cog"></i>
-                Ayarlar
-            </a>
-        </div>
-    </div>
+    <?php include __DIR__ . '/../../sidebar.php'; ?>
 
     <div class="main-content">
         <div class="top-header">
             <div class="header-left">
                 <h1>Gelir Gider Raporu</h1>
             </div>
-            
             <div class="header-right">
-                <!-- Tavsiye Et Kazan button removed -->
-                <div class="user-info">
-                    <div class="user-avatar">
-                        MD
-                    </div>
-                    <div class="user-details">
-                        <h6>Miraç Deprem</h6>
-                        <small>Deprem Yazılım</small>
-                    </div>
-                    <i class="fas fa-chevron-down" style="color: var(--text-secondary);"></i>
-                </div>
+                <?php include __DIR__ . '/../../includes/profile_dropdown.php'; ?>
             </div>
         </div>
        
@@ -515,7 +336,7 @@
     <div id="profileDropdown" class="profile-dropdown">
         <ul>
             <li><button type="button" id="openProfileWidget">Profilim</button></li>
-            <li><a href="/MutabikV2/public/authentication/login.php" id="logoutBtn">Çıkış Yap</a></li>
+            <li><a href="#" id="logoutBtn">Çıkış Yap</a></li>
         </ul>
     </div>
     <div id="profileWidget" class="profile-widget">
