@@ -67,7 +67,7 @@ $companyName = 'Atia Yazılım';
                 <h1>Tahsilat Raporu</h1>
             </div>
             <div class="header-right">
-                <?php include '/../../includes/profile_dropdown.php'; ?>
+                <?php include '../../includes/profile_dropdown.php'; ?>
             </div>
         </div>
         <div class="report-filter-bar">
