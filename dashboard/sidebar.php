@@ -73,7 +73,7 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Giderler Raporu</span>
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/giderler/odemeler_raporu.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Ödemeler Raporu</span>
                 </a>
