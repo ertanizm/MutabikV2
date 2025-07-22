@@ -73,20 +73,7 @@
             </div>
             
             <div class="header-right">
-                <button class="btn btn-success">
-                    <i class="fas fa-gift"></i>
-                    Tavsiye Et, Kazan!
-                </button>
-                
-                <div class="user-info">
-                    <div class="user-avatar">
-                        MD
-                    </div>
-                    <div class="user-details">
-                        <h6>Miraç Deprem</h6>
-                        <small>Deprem Yazılım</small>
-                    </div>
-                </div>
+                <?php include __DIR__ . '/../includes/profile_dropdown.php'; ?>
             </div>
         </div>
        

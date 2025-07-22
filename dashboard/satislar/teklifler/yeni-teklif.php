@@ -21,7 +21,7 @@ try {
 // Kullanıcı bilgilerini al
 $userEmail = $_SESSION['email'] ?? 'miraçdeprem0@gmail.com';
 $userName = 'Miraç Deprem';
-$companyName = 'Deprem Yazılım';
+$companyName = 'Atia Yazılım';
 
 // Veritabanı bağlantısı başarılıysa kullanıcı bilgilerini al
 if (isset($pdo)) {

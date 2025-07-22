@@ -69,15 +69,19 @@
                     <i class="fas fa-user-tie"></i>
                     <span>Çalışanlar</span>
                 </a>
+<<<<<<< HEAD
                 <a href="/MutabikV2/dashboard/giderler/giderler_raporu.php" class="submenu-item">
+=======
+                <a href="" class="submenu-item">
+>>>>>>> fa13a1c06d54a4a362374f145feea75d18050317
                     <i class="fas fa-chart-bar"></i>
                     <span>Giderler Raporu</span>
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/giderler/odemeler_raporu.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Ödemeler Raporu</span>
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/giderler/kdv-raporu.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>KDV Raporu</span>
                 </a>
