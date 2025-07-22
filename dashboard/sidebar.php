@@ -11,7 +11,7 @@
     </div>
     
     <div class="sidebar-menu">
-        <a href="/MutabikV2/dashboard/dashboard2.php" class="menu-item">
+        <a href="./dashboard2.php" class="menu-item">
             <i class="fas fa-chart-line"></i>
             <span>Güncel Durum</span>
         </a>
@@ -23,19 +23,19 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
             <div class="submenu" id="sales-submenu">
-                <a href="/MutabikV2/dashboard/satislar/teklifler/teklifler.php" class="submenu-item">
+                <a href="./reports/teklifler.php" class="submenu-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Teklifler</span>
                 </a>
-                <a href="/MutabikV2/dashboard/satislar/faturalar/faturalar.php" class="submenu-item">
+                <a href="./reports/faturalar.php" class="submenu-item">
                     <i class="fas fa-file-invoice"></i>
                     <span>Faturalar</span>
                 </a>
-                <a href="/MutabikV2/dashboard/satislar/musteriler/musteriler.php" class="submenu-item">
+                <a href="./reports/musteriler.php" class="submenu-item">
                     <i class="fas fa-users"></i>
                     <span>Müşteriler</span>
                 </a>
-                <a href="/MutabikV2/dashboard/satislar/satislar_raporu/satis_rapor.php" class="submenu-item">
+                <a href="./reports/satis_rapor.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Satışlar Raporu</span>
                 </a>
@@ -43,7 +43,7 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Tahsilatlar Raporu</span>
                 </a>
-                <a href="/MutabikV2/dashboard/satislar/gelir_gider_raporu/gelir-gider.php" class="submenu-item">
+                <a href="./reports/gelir-gider.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Gelir Gider Raporu</span>
                 </a>
