@@ -88,9 +88,13 @@
     <?php include __DIR__ . '/../sidebar.php'; ?>
 
     <div class="main-content">
-
-        <div class="header">
-            <h4>Çekler</h4>
+        <div class="top-header">
+            <div class="header-left">
+                <h1>Çekler</h1>
+            </div>
+            <div class="header-right">
+                <?php include __DIR__ . '/../includes/profile_dropdown.php'; ?>
+            </div>
         </div>
 
         <div class="content">
