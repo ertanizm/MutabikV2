@@ -21,7 +21,7 @@ try {
 // Kullanıcı bilgilerini al
 $userEmail = $_SESSION['email'] ?? 'miraçdeprem0@gmail.com';
 $userName = 'Miraç Deprem';
-$companyName = 'Deprem Yazılım';
+$companyName = 'Atia Yazılım';
 
 // Veritabanı bağlantısı başarılıysa kullanıcı bilgilerini al
 if (isset($pdo)) {
@@ -52,6 +52,7 @@ if (isset($pdo)) {
     <title>Satış Faturaları - Mutabık</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="../../dashboard.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #2c3e50;

@@ -1,3 +1,7 @@
+<?php
+$userName = 'Miraç Deprem';
+$companyName = 'Atia Yazılım';
+?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -6,7 +10,7 @@
     <title>Mutabık - Ön Muhasebe Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="./dashboard.css" rel="stylesheet"> </head>
+    <link href="dashboard.css" rel="stylesheet"> </head>
 <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
@@ -20,15 +24,7 @@
             </div>
             
             <div class="header-right">
-                <div class="user-info">
-                    <div class="user-avatar">
-                        MD
-                    </div>
-                    <div class="user-details">
-                        <h6>Miraç Deprem</h6>
-                        <small>Deprem Yazılım</small>
-                    </div>
-                </div>
+                <?php include __DIR__ . '/includes/profile_dropdown.php'; ?>
             </div>
         </div>
 
@@ -268,13 +264,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script2.js"></script>
-    <script>
-const sidebar = document.getElementById('sidebar');
-const collapseBtn = document.getElementById('sidebar-collapse-btn');
-collapseBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    sidebar.classList.toggle('collapsed');
-});
-</script>
 </body>
 </html>
