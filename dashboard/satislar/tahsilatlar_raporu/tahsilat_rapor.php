@@ -60,14 +60,14 @@ $companyName = 'Atia Yazılım';
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
-    <?php include '../../sidebar.php'; ?>
+    <?php include '/../../sidebar.php'; ?>
     <div class="main-content">
         <div class="top-header">
             <div class="header-left">
                 <h1>Tahsilat Raporu</h1>
             </div>
             <div class="header-right">
-                <?php include '../includes/profile_dropdown.php'; ?>
+                <?php include '/../../includes/profile_dropdown.php'; ?>
             </div>
         </div>
         <div class="report-filter-bar">
