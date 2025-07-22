@@ -60,7 +60,7 @@ $companyName = 'Atia Yazılım';
     </style>
 </head>
 <body style="background-color: #f8f9fa;">
-    <?php include '/../../sidebar.php'; ?>
+    <?php include '../../sidebar.php'; ?>
     <div class="main-content">
         <div class="top-header">
             <div class="header-left">
