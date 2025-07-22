@@ -8,15 +8,192 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="./dashboard.css" rel="stylesheet"> </head>
 <body>
-    <?php include __DIR__ . '/sidebar.php'; ?>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-calculator"></i>
+                Mutabık
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active">
+                <i class="fas fa-chart-line"></i>
+                <span>Güncel Durum</span>
+            </a>
+            
+            <div class="menu-section">
+                <div class="menu-item menu-toggle" data-target="sales-submenu">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>SATIŞLAR</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="submenu" id="sales-submenu">
+                    <a href="satislar/teklifler/teklifler.php" class="submenu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Teklifler</span>
+                    </a>
+                    <a href="satislar/faturalar/faturalar.php" class="submenu-item">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Faturalar</span>
+                    </a>
+                    <a href="satislar/musteriler/musteriler.php" class="submenu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Müşteriler</span>
+                    </a>
+                    <a href="satislar/satislar_raporu/satis_rapor.php" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Satışlar Raporu</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Tahsilatlar Raporu</span>
+                    </a>
+                    <a href="satislar/gelir_gider_raporu/gelir-gider.php" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Gelir Gider Raporu</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-item menu-toggle" data-target="expenses-submenu">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>GİDERLER</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="submenu" id="expenses-submenu">
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Gider Listesi</span>
+                    </a>
+                    <a href="/MutabikV2/dashboard/giderler/tedarikciler.php" class="submenu-item">
+                        <i class="fas fa-truck"></i>
+                        <span>Tedarikçiler</span>
+                    </a>
+                    <a href="/MutabikV2/dashboard/giderler/calisanlar.php" class="submenu-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Çalışanlar</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Giderler Raporu</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Ödemeler Raporu</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>KDV Raporu</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-item menu-toggle" data-target="cash-submenu">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>NAKİT</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="submenu" id="cash-submenu">
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-university"></i>
+                        <span>Kasa ve Bankalar</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Çekler</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Kasa / Banka Raporu</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Nakit Akışı Raporu</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-item menu-toggle" data-target="stock-submenu">
+                    <i class="fas fa-boxes"></i>
+                    <span>STOK</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="submenu" id="stock-submenu">
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>Hizmet ve Ürünler</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Depolar</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Depolar Arası Transfer</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-truck"></i>
+                        <span>Giden İrsaliyeler</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-truck fa-flip-horizontal"></i>
+                        <span>Gelen İrsaliyeler</span>
+                    </a>
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-list"></i>
+                        <span>Fiyat Listeleri</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="menu-separator"></div>
+            
+            <a href="#" class="menu-item">
+                <i class="fas fa-star"></i>
+                <span>Uygulamalar</span>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Pazaryeri</span>
+            </a>
+            
+            <a href="#" class="menu-item" id="sidebar-collapse-btn">
+                <i class="fas fa-chevron-left"></i>
+                <span>Menüyü Sakla</span>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Ayarlar</span>
+            </a>
+        </div>
+    </div>
 
     <div class="main-content">
         <div class="top-header">
             <div class="header-left">
                 <h1>Güncel Durum</h1>
             </div>
+            
             <div class="header-right">
-                <?php include __DIR__ . '/includes/profile_dropdown.php'; ?>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        MD
+                    </div>
+                    <div class="user-details">
+                        <h6>Miraç Deprem</h6>
+                        <small>Deprem Yazılım</small>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -256,5 +433,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script2.js"></script>
+    <script>
+const sidebar = document.getElementById('sidebar');
+const collapseBtn = document.getElementById('sidebar-collapse-btn');
+collapseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    sidebar.classList.toggle('collapsed');
+});
+</script>
 </body>
 </html>
