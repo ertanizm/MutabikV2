@@ -15,6 +15,7 @@
             <div class="header-left">
                 <h1>Güncel Durum</h1>
             </div>
+            
             <div class="header-right">
                 <?php include __DIR__ . '/includes/profile_dropdown.php'; ?>
             </div>
@@ -256,5 +257,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script2.js"></script>
+    <script>
+const sidebar = document.getElementById('sidebar');
+const collapseBtn = document.getElementById('sidebar-collapse-btn');
+collapseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    sidebar.classList.toggle('collapsed');
+});
+</script>
 </body>
 </html>

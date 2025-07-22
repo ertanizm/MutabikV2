@@ -543,7 +543,7 @@ if (isset($pdo)) {
                     <i class="fas fa-search"></i>
                 </div>
                 
-                <a href="#" class="create-btn">YENİ FATURA OLUŞTUR</a>
+                <a href="/MutabikV2/dashboard/satislar/faturalar/yeni-fatura.php" class="create-btn">YENİ FATURA OLUŞTUR</a>
             </div>
 
             <!-- Table Container -->

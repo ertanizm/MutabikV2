@@ -1,8 +1,10 @@
 <?php
+// Proje kök yolu (tüm yönlendirme ve linklerde kullanmak için)
+define('BASE_URL', '/MutabikV2/');
 // Giriş bilgileri
 $host = 'localhost';
 $masterDbUser = 'root';
-$masterDbPass = 'akdere';
+$masterDbPass = '1234';
 $masterDbName = 'master_db';
 
 // 0. master_db yoksa oluştur ve tabloları oluştur

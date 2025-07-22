@@ -11,7 +11,7 @@
     <div id="profileDropdown" class="profile-dropdown" style="display:none; right:0; left:auto;">
         <ul>
             <li><button type="button" id="openProfileWidget">Profilim</button></li>
-            <li><a href="#" id="logoutBtn">Çıkış Yap</a></li>
+            <li><a href="/MutabikV2/public/authentication/login.php" id="logoutBtn">Çıkış Yap</a></li>
         </ul>
     </div>
     <div id="profileWidget" class="profile-widget" style="display:none; right:0; left:auto;">

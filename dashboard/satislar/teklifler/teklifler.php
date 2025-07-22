@@ -663,7 +663,7 @@ if (isset($pdo)) {
                     <i class="fas fa-search"></i>
                 </div>
                 
-                <a href="#" class="create-btn">YENİ TEKLİF OLUŞTUR</a>
+                <a href="/MutabikV2/dashboard/satislar/teklifler/yeni-teklif.php" class="create-btn">YENİ TEKLİF OLUŞTUR</a>
             </div>
 
             <!-- Table Container -->
