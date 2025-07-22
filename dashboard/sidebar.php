@@ -99,7 +99,7 @@
                     <i class="fas fa-file-invoice-dollar"></i>
                     <span>Çekler</span>
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/nakit/kasa-banka-raporu.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Kasa / Banka Raporu</span>
                 </a>
