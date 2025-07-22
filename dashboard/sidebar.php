@@ -9,13 +9,13 @@
             Mutabık
         </div>
     </div>
-    
+
     <div class="sidebar-menu">
         <a href="/MutabikV2/dashboard/dashboard2.php" class="menu-item">
             <i class="fas fa-chart-line"></i>
             <span>Güncel Durum</span>
         </a>
-        
+
         <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="sales-submenu">
                 <i class="fas fa-arrow-down"></i>
@@ -49,7 +49,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="expenses-submenu">
                 <i class="fas fa-arrow-up"></i>
@@ -57,7 +57,7 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
             <div class="submenu" id="expenses-submenu">
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/giderler/gider_listesi.php" class="submenu-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Gider Listesi</span>
                 </a>
@@ -69,7 +69,11 @@
                     <i class="fas fa-user-tie"></i>
                     <span>Çalışanlar</span>
                 </a>
-                <a href="#" class="submenu-item">
+<<<<<<< HEAD
+                <a href="/MutabikV2/dashboard/giderler/giderler_raporu.php" class="submenu-item">
+=======
+                <a href="" class="submenu-item">
+>>>>>>> fa13a1c06d54a4a362374f145feea75d18050317
                     <i class="fas fa-chart-bar"></i>
                     <span>Giderler Raporu</span>
                 </a>
@@ -77,13 +81,13 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Ödemeler Raporu</span>
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/giderler/kdv-raporu.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>KDV Raporu</span>
                 </a>
             </div>
         </div>
-        
+
         <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="cash-submenu">
                 <i class="fas fa-money-bill-wave"></i>
@@ -109,7 +113,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="stock-submenu">
                 <i class="fas fa-boxes"></i>
@@ -143,17 +147,17 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="menu-separator"></div>
-        
+
         <a href="#" class="menu-item" id="sidebar-collapse-btn">
             <i class="fas fa-chevron-left"></i>
             <span>Menüyü Sakla</span>
         </a>
-        
+
         <a href="#" class="menu-item">
             <i class="fas fa-cog"></i>
             <span>Ayarlar</span>
         </a>
     </div>
-</div> 
+</div>
