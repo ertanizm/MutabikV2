@@ -62,16 +62,33 @@
                         <i class="fas fa-truck"></i>
                         <span>Giden İrsaliyeler</span>
                     </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck fa-flip-horizontal"></i>
-                        <span>Gelen İrsaliyeler</span>
-                    </a>
+                   
                     <a href="#" class="submenu-item">
                         <i class="fas fa-list"></i>
                         <span>Fiyat Listeleri</span>
                     </a>
                 </div>
             </div>
+             <div class="menu-section">
+            <div class="menu-item menu-toggle" data-target="expenses-submenu">
+                <i class="fas fa-arrow-up"></i>
+                <span>ALIŞLAR</span>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="submenu" id="expenses-submenu">
+                    <a href="#" class="submenu-item">
+                        <i class="fas fa-truck fa-flip-horizontal"></i>
+                        <span>Gelen İrsaliyeler</span>
+                    </a>
+
+                    <a href="#" class="submenu-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Alışlar Raporu</span>
+                    </a>
+                
+                
+            </div>
+        </div>
             <div class="menu-item menu-toggle" data-target="sales-submenu">
                 <i class="fas fa-arrow-down"></i>
                 <span>SATIŞLAR</span>
@@ -132,7 +149,7 @@
         <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="cash-submenu">
                 <i class="fas fa-money-bill-wave"></i>
-                <span>NAKİT</span>
+                <span>FİNANS</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
             <div class="submenu" id="cash-submenu">
@@ -144,7 +161,7 @@
                     <i class="fas fa-file-invoice-dollar"></i>
                     <span>Çekler</span>
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/nakit/kasa-banka-raporu.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Kasa / Banka Raporu</span>
                 </a>
