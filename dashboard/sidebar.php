@@ -50,7 +50,7 @@
                         <i class="fas fa-tags"></i>
                         <span>Hizmet ve Ürünler</span>
                     </a>
-                    <a href="#" class="submenu-item">
+                    <a href="\MutabikV2\dashboard\stok\depolar.php" class="submenu-item">
                         <i class="fas fa-map-marker-alt"></i>
                         <span>Depolar</span>
                     </a>
