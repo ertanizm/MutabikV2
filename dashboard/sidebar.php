@@ -76,12 +76,12 @@
                     <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
                 <div class="submenu" id="expenses-submenu">
-                    <a href="#" class="submenu-item">
+                    <a href="\MutabikV2\dashboard\alislar\gelen_irsaliyeler.php" class="submenu-item">
                         <i class="fas fa-truck fa-flip-horizontal"></i>
                         <span>Gelen İrsaliyeler</span>
                     </a>
 
-                    <a href="#" class="submenu-item">
+                    <a href="\MutabikV2\dashboard\alislar\alislar_raporu.php" class="submenu-item">
                         <i class="fas fa-chart-bar"></i>
                         <span>Alışlar Raporu</span>
                     </a>
