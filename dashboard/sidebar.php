@@ -126,7 +126,7 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
             <div class="submenu" id="expenses-submenu">
-                <a href="/MutabikV2/dashboard/giderler/giderler_raporu.php" class="submenu-item">
+                <a href="/MutabikV2/dashboard/giderler/gider_listesi.php" class="submenu-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Gider Listesi</span>
                 </a>
