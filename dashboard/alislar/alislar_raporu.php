@@ -1,9 +1,3 @@
-
-//                 <a href="/MutabikV2/dashboard/alislar/alislar_raporu.php" class="submenu-item">
-//                    <i class="fas fa-chart-bar"></i>
-//                    <span>Alışlar Raporu</span>
-//                </a>
-
 <?php
 $userName = 'Miraç Deprem';
 $companyName = 'Atia Yazılım';
