@@ -46,7 +46,7 @@
                     <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
                 <div class="submenu" id="stock-submenu">
-                    <a href="#" class="submenu-item">
+                    <a href="\MutabikV2\dashboard\stok\hizmet_urunler.php" class="submenu-item">
                         <i class="fas fa-tags"></i>
                         <span>Hizmet ve Ürünler</span>
                     </a>
@@ -54,7 +54,7 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <span>Depolar</span>
                     </a>
-                    <a href="#" class="submenu-item">
+                    <a href="\MutabikV2\dashboard\stok\depolar_arasi_transfer.php" class="submenu-item">
                         <i class="fas fa-exchange-alt"></i>
                         <span>Depolar Arası Transfer</span>
                     </a>
@@ -63,7 +63,7 @@
                         <span>Giden İrsaliyeler</span>
                     </a>
 
-                    <a href="#" class="submenu-item">
+                    <a href="\MutabikV2\dashboard\stok\fiyat_listeleri.php" class="submenu-item">
                         <i class="fas fa-list"></i>
                         <span>Fiyat Listeleri</span>
                     </a>
