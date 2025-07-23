@@ -36,7 +36,7 @@
                     <i class="fas fa-user-tie"></i>
                     <span>Çalışanlar</span>
                 </a>
-                
+
             </div>
 
             <div class="menu-section">
@@ -58,37 +58,37 @@
                         <i class="fas fa-exchange-alt"></i>
                         <span>Depolar Arası Transfer</span>
                     </a>
-                    <a href="#" class="submenu-item">
+                    <a href="/MutabikV2/dashboard/stok/giden_irsaliyeler.php" class="submenu-item">
                         <i class="fas fa-truck"></i>
                         <span>Giden İrsaliyeler</span>
                     </a>
-                   
+
                     <a href="#" class="submenu-item">
                         <i class="fas fa-list"></i>
                         <span>Fiyat Listeleri</span>
                     </a>
                 </div>
             </div>
-             <div class="menu-section">
-            <div class="menu-item menu-toggle" data-target="expenses-submenu">
-                <i class="fas fa-arrow-up"></i>
-                <span>ALIŞLAR</span>
-                <i class="fas fa-chevron-down toggle-icon"></i>
-            </div>
-            <div class="submenu" id="expenses-submenu">
+            <div class="menu-section">
+                <div class="menu-item menu-toggle" data-target="expenses-submenu">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>ALIŞLAR</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="submenu" id="expenses-submenu">
                     <a href="#" class="submenu-item">
                         <i class="fas fa-truck fa-flip-horizontal"></i>
                         <span>Gelen İrsaliyeler</span>
                     </a>
 
                     <a href="#" class="submenu-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Alışlar Raporu</span>
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Alışlar Raporu</span>
                     </a>
-                
-                
+
+
+                </div>
             </div>
-        </div>
             <div class="menu-item menu-toggle" data-target="sales-submenu">
                 <i class="fas fa-arrow-down"></i>
                 <span>SATIŞLAR</span>
