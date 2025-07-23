@@ -17,12 +17,11 @@
         </a>
 
         <div class="menu-section">
-            <div class="menu-item menu-toggle" data-target="cari-submenu" onclick="toggleSubmenu(event)">
+            <div class="menu-item menu-toggle" data-target="cari-submenu">
                 <i class="fas fa-user-friends"></i>
                 <span>CARİ</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
-
             <div id="cari-submenu" class="submenu" style="display: none;">
                 <a href="/MutabikV2/dashboard/cari/musteriler.php" class="submenu-item">
                     <i class="fas fa-users"></i>
@@ -36,65 +35,48 @@
                     <i class="fas fa-user-tie"></i>
                     <span>Çalışanlar</span>
                 </a>
-                
-            </div>
-
-            <div class="menu-section">
-                <div class="menu-item menu-toggle" data-target="stock-submenu">
-                    <i class="fas fa-boxes"></i>
-                    <span>STOK</span>
-                    <i class="fas fa-chevron-down toggle-icon"></i>
-                </div>
-                <div class="submenu" id="stock-submenu">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-tags"></i>
-                        <span>Hizmet ve Ürünler</span>
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Depolar</span>
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-exchange-alt"></i>
-                        <span>Depolar Arası Transfer</span>
-                    </a>
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck"></i>
-                        <span>Giden İrsaliyeler</span>
-                    </a>
-                   
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-list"></i>
-                        <span>Fiyat Listeleri</span>
-                    </a>
-                </div>
-            </div>
-             <div class="menu-section">
-            <div class="menu-item menu-toggle" data-target="expenses-submenu">
-                <i class="fas fa-arrow-up"></i>
-                <span>ALIŞLAR</span>
-                <i class="fas fa-chevron-down toggle-icon"></i>
-            </div>
-            <div class="submenu" id="expenses-submenu">
-                    <a href="#" class="submenu-item">
-                        <i class="fas fa-truck fa-flip-horizontal"></i>
-                        <span>Gelen İrsaliyeler</span>
-                    </a>
-
-                    <a href="#" class="submenu-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Alışlar Raporu</span>
-                    </a>
-                
-                
             </div>
         </div>
+        <div class="menu-section">
+            <div class="menu-item menu-toggle" data-target="stock-submenu">
+                <i class="fas fa-boxes"></i>
+                <span>STOK</span>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="submenu" id="stock-submenu" style="display: none;">
+                <a href="#" class="submenu-item">
+                    <i class="fas fa-tags"></i>
+                    <span>Hizmet ve Ürünler</span>
+                </a>
+                <a href="#" class="submenu-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Depolar</span>
+                </a>
+                <a href="#" class="submenu-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Depolar Arası Transfer</span>
+                </a>
+                <a href="#" class="submenu-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Giden İrsaliyeler</span>
+                </a>
+                <a href="#" class="submenu-item">
+                    <i class="fas fa-truck fa-flip-horizontal"></i>
+                    <span>Gelen İrsaliyeler</span>
+                </a>
+                <a href="#" class="submenu-item">
+                    <i class="fas fa-list"></i>
+                    <span>Fiyat Listeleri</span>
+                </a>
+            </div>
+        </div>
+        <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="sales-submenu">
                 <i class="fas fa-arrow-down"></i>
                 <span>SATIŞLAR</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
-            <div class="submenu" id="sales-submenu">
+            <div class="submenu" id="sales-submenu" style="display: none;">
                 <a href="/MutabikV2/dashboard/satislar/teklifler/teklifler.php" class="submenu-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Teklifler</span>
@@ -103,7 +85,6 @@
                     <i class="fas fa-file-invoice"></i>
                     <span>Faturalar</span>
                 </a>
-
                 <a href="/MutabikV2/dashboard/satislar/satislar_raporu/satis_rapor.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Satışlar Raporu</span>
@@ -118,20 +99,26 @@
                 </a>
             </div>
         </div>
-
         <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="expenses-submenu">
                 <i class="fas fa-arrow-up"></i>
                 <span>GİDERLER</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
-            <div class="submenu" id="expenses-submenu">
+            <div class="submenu" id="expenses-submenu" style="display: none;">
                 <a href="#" class="submenu-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Gider Listesi</span>
                 </a>
-
-                <a href="#" class="submenu-item">
+                <a href="/MutabikV2/dashboard/giderler/tedarikciler.php" class="submenu-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Tedarikçiler</span>
+                </a>
+                <a href="/MutabikV2/dashboard/giderler/calisanlar.php" class="submenu-item">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Çalışanlar</span>
+                </a>
+                <a href="/MutabikV2/dashboard/giderler/giderler_raporu.php" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Giderler Raporu</span>
                 </a>
@@ -145,14 +132,13 @@
                 </a>
             </div>
         </div>
-
         <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="cash-submenu">
                 <i class="fas fa-money-bill-wave"></i>
-                <span>FİNANS</span>
+                <span>NAKİT</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
-            <div class="submenu" id="cash-submenu">
+            <div class="submenu" id="cash-submenu" style="display: none;">
                 <a href="#" class="submenu-item">
                     <i class="fas fa-university"></i>
                     <span>Kasa ve Bankalar</span>
@@ -161,12 +147,12 @@
                     <i class="fas fa-file-invoice-dollar"></i>
                     <span>Çekler</span>
                 </a>
-                <a href="/MutabikV2/dashboard/nakit/kasa-banka-raporu.php" class="submenu-item">
+                <a href="#" class="submenu-item">
                     <i class="fas fa-chart-bar"></i>
                     <span>Kasa / Banka Raporu</span>
                 </a>
-                <a href="/MutabikV2/dashboard/nakit/nakit_akis_raporu.php" class="submenu-item">
-                    <i class="fas fa-exchange-alt"></i>
+                <a href="#" class="submenu-item">
+                    <i class="fas fa-chart-bar"></i>
                     <span>Nakit Akışı Raporu</span>
                 </a>
             </div>

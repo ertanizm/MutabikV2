@@ -39,8 +39,10 @@ window.addEventListener('DOMContentLoaded', function() {
                     icon.classList.add('fa-chevron-down');
                 }
             });
-            // Sadece tıklanan submenu'yi aç/kapa
-            const submenu = this.nextElementSibling;
+            // Sadece tıklanan submenu'yi aç/kapa (data-target ile id eşleşmesi)
+            const submenuId = this.getAttribute('data-target');
+            const submenu = document.getElementById(submenuId);
+            if (!submenu) return;
             if (submenu.style.display === 'block') {
                 submenu.style.display = 'none';
                 this.classList.remove('active');
