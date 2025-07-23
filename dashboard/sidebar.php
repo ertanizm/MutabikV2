@@ -138,8 +138,13 @@
                 <span>NAKİT</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
+<<<<<<< HEAD
             <div class="submenu" id="cash-submenu" style="display: none;">
                 <a href="#" class="submenu-item">
+=======
+            <div class="submenu" id="cash-submenu">
+                <a href="/MutabikV2/dashboard/nakit/kasa_ve_bankalar.php" class="submenu-item">
+>>>>>>> c34020813c0abe13bc473829d83b2fbe218cbabb
                     <i class="fas fa-university"></i>
                     <span>Kasa ve Bankalar</span>
                 </a>
