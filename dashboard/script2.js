@@ -22,42 +22,7 @@ window.addEventListener('DOMContentLoaded', function() {
             toggleSidebar();
         });
     }
-
-    // Menüde sadece bir submenu açık olsun
-    document.querySelectorAll('.menu-toggle').forEach(toggle => {
-        toggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Tüm submenu'leri kapat ve tüm menu-toggle'lardan active class'ını kaldır
-            document.querySelectorAll('.submenu').forEach(sm => {
-                sm.style.display = 'none';
-            });
-            document.querySelectorAll('.menu-toggle').forEach(mt => {
-                mt.classList.remove('active');
-                const icon = mt.querySelector('.toggle-icon');
-                if (icon) {
-                    icon.classList.remove('fa-chevron-up');
-                    icon.classList.add('fa-chevron-down');
-                }
-            });
-            // Sadece tıklanan submenu'yi aç/kapa (data-target ile id eşleşmesi)
-            const submenuId = this.getAttribute('data-target');
-            const submenu = document.getElementById(submenuId);
-            if (!submenu) return;
-            if (submenu.style.display === 'block') {
-                submenu.style.display = 'none';
-                this.classList.remove('active');
-            } else {
-                submenu.style.display = 'block';
-                this.classList.add('active');
-                const toggleIcon = this.querySelector('.toggle-icon');
-                if (toggleIcon) {
-                    toggleIcon.classList.remove('fa-chevron-down');
-                    toggleIcon.classList.add('fa-chevron-up');
-                }
-            }
-        });
-    });
-
+    // --- BURADA .menu-toggle için event listener kaldırıldı ---
     // Sayfa yüklendiğinde sadece aktif olan submenu açık kalsın, diğerleri kapalı olsun
     setTimeout(function() {
         let anyOpen = false;
