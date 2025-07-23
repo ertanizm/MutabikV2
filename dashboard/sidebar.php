@@ -165,8 +165,8 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Kasa / Banka Raporu</span>
                 </a>
-                <a href="#" class="submenu-item">
-                    <i class="fas fa-chart-bar"></i>
+                <a href="/MutabikV2/dashboard/nakit/nakit_akis_raporu.php" class="submenu-item">
+                    <i class="fas fa-exchange-alt"></i>
                     <span>Nakit Akışı Raporu</span>
                 </a>
             </div>
