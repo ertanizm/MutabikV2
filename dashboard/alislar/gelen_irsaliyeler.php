@@ -1,8 +1,3 @@
-//          <a href="/MutabikV2/dashboard/alislar/gelen_irsaliyeler.php" class="submenu-item">
-//              <i class="fas fa-truck fa-flip-horizontal"></i>
-//              <span>Gelen İrsaliyeler</span>
-//          </a>
-
 <?php
 $userName = 'Miraç Deprem';
 $companyName = 'Atia Yazılım';
