@@ -36,7 +36,7 @@
                     <i class="fas fa-user-tie"></i>
                     <span>Çalışanlar</span>
                 </a>
-                
+
             </div>
 
             <div class="menu-section">
@@ -46,6 +46,7 @@
                     <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
                 <div class="submenu" id="stock-submenu">
+<<<<<<< HEAD
                     <a href="/MutabikV2/dashboard/stok/hizmet_urunler.php" class="submenu-item" title="Hizmet ve Ürünler">
                         <i class="fas fa-tags"></i>
                         <span>Hizmet ve Ürünler</span>
@@ -64,11 +65,32 @@
                     </a>
                    
                     <a href="#" class="submenu-item" title="Fiyat Listeleri">
+=======
+                    <a href="\MutabikV2\dashboard\stok\hizmet_urunler.php" class="submenu-item">
+                        <i class="fas fa-tags"></i>
+                        <span>Hizmet ve Ürünler</span>
+                    </a>
+                    <a href="\MutabikV2\dashboard\stok\depolar.php" class="submenu-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Depolar</span>
+                    </a>
+                    <a href="\MutabikV2\dashboard\stok\depolar_arasi_transfer.php" class="submenu-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Depolar Arası Transfer</span>
+                    </a>
+                    <a href="/MutabikV2/dashboard/stok/giden_irsaliyeler.php" class="submenu-item">
+                        <i class="fas fa-truck"></i>
+                        <span>Giden İrsaliyeler</span>
+                    </a>
+
+                    <a href="\MutabikV2\dashboard\stok\fiyat_listeleri.php" class="submenu-item">
+>>>>>>> e2192168da9953d61cf6b817c75e6f9652fc1a58
                         <i class="fas fa-list"></i>
                         <span>Fiyat Listeleri</span>
                     </a>
                 </div>
             </div>
+<<<<<<< HEAD
              <div class="menu-section">
             <div class="menu-item menu-toggle" data-target="expenses-submenu" title="ALIŞLAR">
                 <i class="fas fa-arrow-up"></i>
@@ -77,19 +99,40 @@
             </div>
             <div class="submenu" id="expenses-submenu">
                     <a href="#" class="submenu-item" title="Gelen İrsaliyeler">
+=======
+            <div class="menu-section">
+                <div class="menu-item menu-toggle" data-target="expenses-submenu">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>ALIŞLAR</span>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="submenu" id="expenses-submenu">
+                    <a href="\MutabikV2\dashboard\alislar\gelen_irsaliyeler.php" class="submenu-item">
+>>>>>>> e2192168da9953d61cf6b817c75e6f9652fc1a58
                         <i class="fas fa-truck fa-flip-horizontal"></i>
                         <span>Gelen İrsaliyeler</span>
                     </a>
 
+<<<<<<< HEAD
                     <a href="#" class="submenu-item" title="Alışlar Raporu">
                     <i class="fas fa-chart-bar"></i>
                     <span>Alışlar Raporu</span>
+=======
+                    <a href="\MutabikV2\dashboard\alislar\alislar_raporu.php" class="submenu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Alışlar Raporu</span>
+>>>>>>> e2192168da9953d61cf6b817c75e6f9652fc1a58
                     </a>
-                
-                
+
+
+                </div>
             </div>
+<<<<<<< HEAD
         </div>
             <div class="menu-item menu-toggle" data-target="sales-submenu" title="SATIŞLAR">
+=======
+            <div class="menu-item menu-toggle" data-target="sales-submenu">
+>>>>>>> e2192168da9953d61cf6b817c75e6f9652fc1a58
                 <i class="fas fa-arrow-down"></i>
                 <span>SATIŞLAR</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
