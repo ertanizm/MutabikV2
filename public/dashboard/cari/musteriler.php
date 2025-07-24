@@ -395,6 +395,78 @@ if (isset($pdo)) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../script2.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const newBtn = document.querySelector('button[data-bs-target="#addCustomerModal"]:not(.edit-btn)');
+    if (newBtn) {
+      newBtn.addEventListener("click", () => {
+        const form = document.getElementById("addCustomerForm");
+        if (form) form.reset();
+
+        const idInput = document.getElementById("customerId");
+        if (idInput) idInput.value = "";
+
+        const modalTitle = document.getElementById("addCustomerModalLabel");
+        const submitBtn = document.getElementById("submitCustomerBtn");
+
+        if (modalTitle) modalTitle.textContent = "Yeni Müşteri Ekle";
+        if (submitBtn) submitBtn.textContent = "Müşteriyi Kaydet";
+      });
+    }
+
+    document.querySelectorAll(".edit-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const modal = new bootstrap.Modal(document.getElementById("addCustomerModal"));
+
+        document.getElementById("customerId").value = button.dataset.id || "";
+        document.getElementById("customerName").value = button.dataset.isim || "";
+        document.getElementById("customerTaxId").value = button.dataset.vergi_no || "";
+        document.getElementById("customerEmail").value = button.dataset.email || "";
+        document.getElementById("customerPhone").value = button.dataset.telefon || "";
+        document.getElementById("customerAddress").value = button.dataset.adres || "";
+        document.getElementById("customerCity").value = button.dataset.il || "";
+        document.getElementById("customerDistrict").value = button.dataset.ilce || "";
+
+        const modalTitle = document.getElementById("addCustomerModalLabel");
+        const submitBtn = document.getElementById("submitCustomerBtn");
+
+        if (modalTitle) modalTitle.textContent = "Müşteri Düzenle";
+        if (submitBtn) submitBtn.textContent = "Güncellemeyi Kaydet";
+
+        modal.show();
+      });
+    });
+    document.querySelectorAll('button.btn-danger').forEach(button => {
+  button.addEventListener('click', function() {
+    const id = this.dataset.id;
+    if (!id) return;
+
+    if (!confirm('Müşteriyi silmek istediğinize emin misiniz?')) return;
+
+    fetch('musteriler.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `action=delete&id=${encodeURIComponent(id)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Satırı DOM'dan kaldır
+        this.closest('tr').remove();
+        alert('Müşteri başarıyla silindi.');
+      } else {
+        alert('Silme sırasında hata: ' + (data.message || 'Bilinmeyen hata'));
+      }
+    })
+    .catch(() => {
+      alert('Silme isteği gönderilirken hata oluştu.');
+    });
+  });
+});
+  });
+</script>
 
 </body>
 </html>

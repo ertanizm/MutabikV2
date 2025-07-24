@@ -4,7 +4,7 @@ session_start();
 // Veritabanı bilgilerin
 $servername = "localhost";
 $username = "root";
-$password = "1234";
+$password = "akdere";
 $dbname = "master_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (password_verify($password, $hashed_password)) {
       // Doğru → session aç, YÖNLENDİR
       $_SESSION['email'] = $email;
-      header("Location: /project/MutabikV2/dashboard/dashboard2.php");
+      header("Location: /MutabikV2/public/dashboard/dashboard2.php");
       exit();
     } else {
       $error = "Hatalı şifre!";
