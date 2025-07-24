@@ -3,11 +3,7 @@
 $host = 'localhost';
 $db   = 'master_db';
 $user = 'root';
-<<<<<<< HEAD:authentication/verify.php
-$pass = '';
-=======
-$pass = 'akdere';
->>>>>>> 6945677bd6f6d77483c463d515101e84c0109464:public/authentication/verify.php
+$pass = '1234'; // Veritabanı şifreni buraya gir
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

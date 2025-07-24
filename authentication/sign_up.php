@@ -12,11 +12,7 @@ use PHPMailer\PHPMailer\Exception;
 $host = 'localhost';
 $db   = 'master_db';
 $user = 'root';
-<<<<<<< HEAD:authentication/sign_up.php
-$pass = '';
-=======
-$pass = 'akdere';
->>>>>>> 6945677bd6f6d77483c463d515101e84c0109464:public/authentication/sign_up.php
+$pass = '1234'; // Veritabanı şifreni buraya gir
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -34,9 +30,9 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firma_adi = $_POST['firma_adi'] ?? '';
     $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $pass = $_POST['password'] ?? '';
 
-    if (!$firma_adi || !$email || !$password) {
+    if (!$firma_adi || !$email || !$pass) {
         die('Lütfen tüm alanları doldurun.');
     }
 
@@ -45,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Şifreyi hashle
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
 
     // 6 haneli doğrulama kodu oluştur
     $verification_code = rand(100000, 999999);
