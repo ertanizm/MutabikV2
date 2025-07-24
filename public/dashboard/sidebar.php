@@ -191,6 +191,29 @@
             <a href="/MutabikV2/public/dashboard/ayarlar/kullanicilar.php" class="submenu-item" title="Kullanıcılar">Kullanıcılar</a>
             <a href="/MutabikV2/public/dashboard/ayarlar/yazdirma-sablonlari.php" class="submenu-item" title="Yazdırma Şablonları">Yazdırma Şablonları</a>
         </div>
-    </div> 
+    </div>
+</div>
+
+
+
+
+<div class="menu-separator"></div>
+<a href="#" class="menu-item" id="sidebar-collapse-btn" title="Menüyü Sakla">
+    <i class="fas fa-chevron-left"></i>
+    <span>Menüyü Sakla</span>
+</a>
+<div class="menu-section">
+    <div class="menu-item menu-toggle" data-target="settings-submenu" title="AYARLAR">
+        <i class="fas fa-cog"></i>
+        <span>AYARLAR</span>
+        <i class="fas fa-chevron-down toggle-icon"></i>
+    </div>
+    <div class="submenu" id="settings-submenu">
+        <a href="/MutabikV2/public/dashboard/ayarlar/firma-bilgileri.php" class="submenu-item" title="Firma Bilgileri">Firma Bilgileri</a>
+        <a href="/MutabikV2/public/dashboard/ayarlar/kategori-etiket.php" class="submenu-item" title="Kategori ve Etiketler">Kategori ve Etiketler</a>
+        <a href="/MutabikV2/public/dashboard/ayarlar/kullanicilar.php" class="submenu-item" title="Kullanıcılar">Kullanıcılar</a>
+        <a href="/MutabikV2/public/dashboard/ayarlar/yazdirma-sablonlari.php" class="submenu-item" title="Yazdırma Şablonları">Yazdırma Şablonları</a>
+    </div>
+</div> 
 </div>
 </div>

@@ -4,7 +4,7 @@ define('BASE_URL', '/MutabikV2/');
 // Giriş bilgileri
 $host = 'localhost';
 $masterDbUser = 'root';
-$masterDbPass = '1234';
+$masterDbPass = 'akdere';
 $masterDbName = 'master_db';
 
 // 0. master_db yoksa oluştur ve tabloları oluştur
@@ -42,8 +42,7 @@ try {
                 ON UPDATE CASCADE
         )
     ");
-
-} catch (PDOException $e) {
+   } catch (PDOException $e) {
     die("Ana veritabanı oluşturulamadı: " . $e->getMessage());
 }
 
@@ -143,7 +142,6 @@ try {
             email VARCHAR(100)
         )
     ");
-
     echo "✅ Şirket ve veritabanı başarıyla oluşturuldu: $dbName";
 
 } catch (PDOException $e) {
