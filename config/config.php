@@ -42,8 +42,7 @@ try {
                 ON UPDATE CASCADE
         )
     ");
-
-} catch (PDOException $e) {
+   } catch (PDOException $e) {
     die("Ana veritabanı oluşturulamadı: " . $e->getMessage());
 }
 
@@ -143,7 +142,6 @@ try {
             email VARCHAR(100)
         )
     ");
-
     echo "✅ Şirket ve veritabanı başarıyla oluşturuldu: $dbName";
 
 } catch (PDOException $e) {
