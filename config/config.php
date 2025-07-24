@@ -4,12 +4,12 @@ define('BASE_URL', '/MutabikV2/');
 // Giriş bilgileri
 $host = 'localhost';
 $masterDbUser = 'root';
-$masterDbPass = '1234';
+$masterDbPass = '';
 $masterDbName = 'master_db';
 
 // 0. master_db yoksa oluştur ve tabloları oluştur
 try {
-    $pdo = new PDO("mysql:host=$host", $masterDbUser, $masterDbPass);
+    $pdo = new PDO("mysql:host=$host", $masterDbUser,'');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Veritabanı oluştur
@@ -49,7 +49,7 @@ try {
 
 // 1. master_db bağlantısı
 try {
-    $masterPdo = new PDO("mysql:host=$host;dbname=$masterDbName", $masterDbUser, $masterDbPass);
+    $masterPdo = new PDO("mysql:host=$host;dbname=$masterDbName", $masterDbUser, '');
     $masterPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Bağlantı hatası: " . $e->getMessage());
