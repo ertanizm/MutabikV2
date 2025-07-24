@@ -46,9 +46,9 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     echo "\xEF\xBB\xBF";
 
     $output = fopen('php://output', 'w');
-    fputcsv($output, ['ID', 'İsim', 'Vergi No', 'Email', 'Telefon', 'Adres', 'İl', 'İlçe']);
+    fputcsv($output, ['ID', 'İsim', 'Vergi No', 'Email', 'Telefon', 'Adres', 'İl', 'İlçe', 'Açıklama']);
 
-    $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce FROM cariler WHERE tip = 'calisan' ORDER BY isim ASC");
+    $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce, aciklama FROM cariler WHERE tip = 'calisan' ORDER BY isim ASC");
     while ($row = $stmt->fetch()) {
         fputcsv($output, $row);
     }
@@ -88,19 +88,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $adres = trim($_POST['adres'] ?? '');
         $il = trim($_POST['il'] ?? '');
         $ilce = trim($_POST['ilce'] ?? '');
+        $aciklama = trim($_POST['aciklama'] ?? '');
+
 
         if ($name !== '') {
             try {
                 if ($id) {
                     // Güncelleme
-                    $stmt = $pdo->prepare("UPDATE cariler SET isim = ?, vergi_no = ?, email = ?, telefon = ?, adres = ?, il = ?, ilce = ? WHERE id = ?");
-                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce, $id]);
+                    $stmt = $pdo->prepare("UPDATE cariler SET isim = ?, vergi_no = ?, email = ?, telefon = ?, adres = ?, il = ?, ilce = ?, aciklama = ? WHERE id = ?");
+                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce, $aciklama, $id]);
                     header("Location: calisanlar.php?updated=1");
                     exit;
                 } else {
                     // Yeni ekleme
-                    $stmt = $pdo->prepare("INSERT INTO cariler (isim, vergi_no, email, telefon, adres, il, ilce, tip) VALUES (?, ?, ?, ?, ?, ?, ?, 'calisan')");
-                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce]);
+                    $stmt = $pdo->prepare("INSERT INTO cariler (isim, vergi_no, email, telefon, adres, il, ilce, aciklama, tip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'calisan')");
+                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce, $aciklama]);
                     header("Location: calisanlar.php?success=1");
                     exit;
                 }
@@ -119,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $employees = [];
 if (isset($pdo)) {
     try {
-        $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce FROM cariler WHERE tip = 'calisan' ORDER BY id ASC");
+        $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce, aciklama FROM cariler WHERE tip = 'calisan' ORDER BY id ASC");
         $employees = $stmt->fetchAll();
     } catch (PDOException $e) {
         error_log("Çalışan verileri alınamadı: " . $e->getMessage());
@@ -233,7 +235,7 @@ if (isset($pdo)) {
                             <th>E-posta</th>
                             <th>Telefon</th>
                             <th>Adres</th>
-                            
+                            <th>Açıklama</th>
                             <th>İşlemler</th>
                         </tr>
                     </thead>
@@ -251,7 +253,8 @@ if (isset($pdo)) {
                                     <td><?= htmlspecialchars($employee['email']) ?></td>
                                     <td><?= htmlspecialchars($employee['telefon']) ?></td>
                                     <td><?= htmlspecialchars($employee['adres']) ?></td>
-                                    
+                                    <td><?= htmlspecialchars($employee['aciklama']) ?></td>
+
 
                                     <td class="action-buttons">
                                         <button 
@@ -265,6 +268,7 @@ if (isset($pdo)) {
                                         data-adres="<?= htmlspecialchars($employee['adres']) ?>"
                                         data-il="<?= htmlspecialchars($employee['il'] ?? '') ?>"
                                         data-ilce="<?= htmlspecialchars($employee['ilce'] ?? '') ?>"
+                                        data-aciklama="<?= htmlspecialchars($employee['aciklama'] ?? '') ?>"
                                         >
                                         <i class="fas fa-edit"></i>
                                         </button>
@@ -331,6 +335,10 @@ if (isset($pdo)) {
                                 <label for="customerDistrict" class="form-label">İlçe</label>
                                 <input type="text" class="form-control" id="customerDistrict" name="ilce">
                             </div>
+                            <div class="mb-3">
+                                <label for="customerNote" class="form-label">Açıklama</label>
+                                <textarea class="form-control" id="customerNote" name="aciklama" rows="2"></textarea>
+                            </div>
                         </div>
                    </form>
                 </div>
@@ -378,6 +386,7 @@ if (isset($pdo)) {
         document.getElementById("customerAddress").value = button.dataset.adres || "";
         document.getElementById("customerCity").value = button.dataset.il || "";
         document.getElementById("customerDistrict").value = button.dataset.ilce || "";
+        document.getElementById("customerNote").value = button.dataset.aciklama || "";
 
         const modalTitle = document.getElementById("addCustomerModalLabel");
         const submitBtn = document.getElementById("submitCustomerBtn");
