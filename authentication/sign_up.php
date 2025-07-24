@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-require '../../lib/phpmailer/Exception.php';
-require '../../lib/phpmailer/PHPMailer.php';
-require '../../lib/phpmailer/SMTP.php';
+require '../lib/phpmailer/Exception.php';
+require '../lib/phpmailer/PHPMailer.php';
+require '../lib/phpmailer/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\Exception;
 $host = 'localhost';
 $db   = 'master_db';
 $user = 'root';
-$pass = '1234';
+$pass = ''; // Veritabanı şifreni buraya gir
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -30,9 +30,9 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firma_adi = $_POST['firma_adi'] ?? '';
     $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $pass = $_POST['password'] ?? '';
 
-    if (!$firma_adi || !$email || !$password) {
+    if (!$firma_adi || !$email || !$pass) {
         die('Lütfen tüm alanları doldurun.');
     }
 
@@ -41,19 +41,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Şifreyi hashle
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
 
     // 6 haneli doğrulama kodu oluştur
     $verification_code = rand(100000, 999999);
 
-    // Kullanıcıyı is_verified=0 olarak veritabanına ekle
     try {
-        // Burada company_id ve role değerlerini kendine göre ayarla
-         // Örnek, ya da formdan al
-          // Örnek
-        $company_id = 1;
-        $stmt = $pdo->prepare("INSERT INTO users (email, password_hash, company_id, verification_code, is_verified) VALUES (?, ?, ?, ?, 0)");
-        $stmt->execute([$email, $hashedPassword, $company_id, $verification_code]);
+        // 1. Şirket var mı kontrol et, yoksa ekle
+        $stmt = $pdo->prepare("SELECT id FROM companies WHERE name = ?");
+        $stmt->execute([$firma_adi]);
+        $company = $stmt->fetch();
+
+        if ($company) {
+            $company_id = $company['id'];
+        } else {
+            $db_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $firma_adi)) . '_db';
+            $stmt = $pdo->prepare("INSERT INTO companies (name, db_name, start_date, status) VALUES (?, ?, CURDATE(), 'Aktif')");
+            $stmt->execute([$firma_adi, $db_name]);
+            $company_id = $pdo->lastInsertId();
+        }
+
+        // 2. Kullanıcıyı ekle
+        $stmt = $pdo->prepare("INSERT INTO users (email, password_hash, company_id) VALUES (?, ?, ?)");
+        $stmt->execute([$email, $hashedPassword, $company_id]);
     } catch (PDOException $e) {
         die("Kayıt sırasında hata: " . $e->getMessage());
     }
@@ -80,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->send();
 
         // Başarılıysa verify.php sayfasına yönlendir
-        header("Location: verify.php?email=" . urlencode($email));
+        //header("Location: verify.php?email=" . urlencode($email));
         exit;
     } catch (Exception $e) {
         die("Mail gönderilemedi: {$mail->ErrorInfo}");

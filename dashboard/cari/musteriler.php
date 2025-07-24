@@ -46,9 +46,9 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     echo "\xEF\xBB\xBF";
 
     $output = fopen('php://output', 'w');
-    fputcsv($output, ['ID', 'İsim', 'Vergi No', 'Email', 'Telefon', 'Adres', 'İl', 'İlçe']);
+    fputcsv($output, ['ID', 'İsim', 'Vergi No', 'Email', 'Telefon', 'Adres', 'İl', 'İlçe', 'Açıklama']);
 
-    $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce FROM cariler WHERE tip = 'musteri' ORDER BY isim ASC");
+    $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce, aciklama FROM cariler WHERE tip = 'musteri' ORDER BY isim ASC");
     while ($row = $stmt->fetch()) {
         fputcsv($output, $row);
     }
@@ -88,19 +88,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $adres = trim($_POST['adres'] ?? '');
         $il = trim($_POST['il'] ?? '');
         $ilce = trim($_POST['ilce'] ?? '');
+        $aciklama = trim($_POST['aciklama'] ?? '');
 
         if ($name !== '') {
             try {
                 if ($id) {
                     // Güncelleme
-                    $stmt = $pdo->prepare("UPDATE cariler SET isim = ?, vergi_no = ?, email = ?, telefon = ?, adres = ?, il = ?, ilce = ? WHERE id = ?");
-                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce, $id]);
+                    $stmt = $pdo->prepare("UPDATE cariler SET isim = ?, vergi_no = ?, email = ?, telefon = ?, adres = ?, il = ?, ilce = ?, aciklama = ? WHERE id = ?");
+                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce, $aciklama, $id]);
                     header("Location: musteriler.php?updated=1");
                     exit;
                 } else {
                     // Yeni ekleme
-                    $stmt = $pdo->prepare("INSERT INTO cariler (isim, vergi_no, email, telefon, adres, il, ilce, tip) VALUES (?, ?, ?, ?, ?, ?, ?, 'musteri')");
-                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce]);
+                    $stmt = $pdo->prepare("INSERT INTO cariler (isim, vergi_no, email, telefon, adres, il, ilce, aciklama, tip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'musteri')");
+                    $stmt->execute([$name, $vergi_no, $email, $telefon, $adres, $il, $ilce, $aciklama]);
                     header("Location: musteriler.php?success=1");
                     exit;
                 }
@@ -119,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $customers = [];
 if (isset($pdo)) {
     try {
-        $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce FROM cariler WHERE tip = 'musteri' ORDER BY id ASC");
+        $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce, aciklama FROM cariler WHERE tip = 'musteri' ORDER BY id ASC");
         $customers = $stmt->fetchAll();
     } catch (PDOException $e) {
         error_log("Müşteri verileri alınamadı: " . $e->getMessage());
@@ -285,6 +286,7 @@ if (isset($pdo)) {
                             <th>E-posta</th>
                             <th>Telefon</th>
                             <th>Adres</th>
+                            <th>Açıklama</th>
                             <th>İşlemler</th>
                         </tr>
                     </thead>
@@ -302,7 +304,7 @@ if (isset($pdo)) {
                                     <td><?= htmlspecialchars($customer['email']) ?></td>
                                     <td><?= htmlspecialchars($customer['telefon']) ?></td>
                                     <td><?= htmlspecialchars($customer['adres']) ?></td>
-                                    
+                                    <td><?= htmlspecialchars($customer['aciklama']) ?></td>
 
                                     <td class="action-buttons">
                                         <button 
@@ -316,6 +318,7 @@ if (isset($pdo)) {
                                         data-adres="<?= htmlspecialchars($customer['adres']) ?>"
                                         data-il="<?= htmlspecialchars($customer['il'] ?? '') ?>"
                                         data-ilce="<?= htmlspecialchars($customer['ilce'] ?? '') ?>"
+                                        data-aciklama="<?= htmlspecialchars($customer['aciklama'] ?? '') ?>"
                                         >
                                         <i class="fas fa-edit"></i>
                                         </button>
@@ -382,6 +385,10 @@ if (isset($pdo)) {
                                 <label for="customerDistrict" class="form-label">İlçe</label>
                                 <input type="text" class="form-control" id="customerDistrict" name="ilce">
                             </div>
+                             <div class="mb-3">
+                                <label for="customerNote" class="form-label">Açıklama</label>
+                                <textarea class="form-control" id="customerNote" name="aciklama" rows="2"></textarea>
+                            </div>
                         </div>
                    </form>
                 </div>
@@ -395,6 +402,79 @@ if (isset($pdo)) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../script2.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const newBtn = document.querySelector('button[data-bs-target="#addCustomerModal"]:not(.edit-btn)');
+    if (newBtn) {
+      newBtn.addEventListener("click", () => {
+        const form = document.getElementById("addCustomerForm");
+        if (form) form.reset();
+
+        const idInput = document.getElementById("customerId");
+        if (idInput) idInput.value = "";
+
+        const modalTitle = document.getElementById("addCustomerModalLabel");
+        const submitBtn = document.getElementById("submitCustomerBtn");
+
+        if (modalTitle) modalTitle.textContent = "Yeni Müşteri Ekle";
+        if (submitBtn) submitBtn.textContent = "Müşteriyi Kaydet";
+      });
+    }
+
+    document.querySelectorAll(".edit-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const modal = new bootstrap.Modal(document.getElementById("addCustomerModal"));
+
+        document.getElementById("customerId").value = button.dataset.id || "";
+        document.getElementById("customerName").value = button.dataset.isim || "";
+        document.getElementById("customerTaxId").value = button.dataset.vergi_no || "";
+        document.getElementById("customerEmail").value = button.dataset.email || "";
+        document.getElementById("customerPhone").value = button.dataset.telefon || "";
+        document.getElementById("customerAddress").value = button.dataset.adres || "";
+        document.getElementById("customerCity").value = button.dataset.il || "";
+        document.getElementById("customerDistrict").value = button.dataset.ilce || "";
+        document.getElementById("customerNote").value = button.dataset.aciklama || "";
+
+        const modalTitle = document.getElementById("addCustomerModalLabel");
+        const submitBtn = document.getElementById("submitCustomerBtn");
+
+        if (modalTitle) modalTitle.textContent = "Müşteri Düzenle";
+        if (submitBtn) submitBtn.textContent = "Güncellemeyi Kaydet";
+
+        modal.show();
+      });
+    });
+    document.querySelectorAll('button.btn-danger').forEach(button => {
+  button.addEventListener('click', function() {
+    const id = this.dataset.id;
+    if (!id) return;
+
+    if (!confirm('Müşteriyi silmek istediğinize emin misiniz?')) return;
+
+    fetch('musteriler.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `action=delete&id=${encodeURIComponent(id)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Satırı DOM'dan kaldır
+        this.closest('tr').remove();
+        alert('Müşteri başarıyla silindi.');
+      } else {
+        alert('Silme sırasında hata: ' + (data.message || 'Bilinmeyen hata'));
+      }
+    })
+    .catch(() => {
+      alert('Silme isteği gönderilirken hata oluştu.');
+    });
+  });
+});
+  });
+</script>
 
 </body>
 </html>
