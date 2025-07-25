@@ -1,9 +1,9 @@
 <?php
 // 1. Veritabanı bağlantısı
 $host = 'localhost';
-$dbname = 'abc_db'; // Veritabanı adını kendi projenle aynı yap
+$dbname = 'deneme_db'; // Veritabanı adını kendi projenle aynı yap
 $user = 'root';
-$pass = ''; // XAMPP kullanıyorsan genellikle boş olur
+$pass = 'akdere'; // XAMPP kullanıyorsan genellikle boş olur
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
@@ -74,72 +74,7 @@ $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="../dashboard.css" rel="stylesheet">
-    <style>
-        /* Müşteriler sayfası özel stil */
-        .customer-actions-bar {
-            background-color: var(--card-bg);
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .customer-actions-bar .search-box {
-            flex-grow: 1;
-            max-width: 300px;
-        }
-
-        .customer-list-section .table {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            /* Köşeleri yuvarlatmak için */
-        }
-
-        .customer-list-section .table thead {
-            background-color: var(--sidebar-bg);
-            color: white;
-        }
-
-        .customer-list-section .table th,
-        .customer-list-section .table td {
-            vertical-align: middle;
-        }
-
-        .customer-list-section .table tbody tr:nth-child(even) {
-            background-color: #f0f2f5;
-        }
-
-        .customer-list-section .table-bordered {
-            border: 1px solid var(--border-color);
-        }
-
-        .customer-list-section .action-buttons .btn {
-            padding: 5px 10px;
-            font-size: 0.85rem;
-        }
-
-        /* Modal Stilleri */
-        .modal-header {
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom: none;
-        }
-
-        .modal-header .btn-close {
-            filter: invert(1);
-            /* Beyaz çarpı işareti */
-        }
-
-        .modal-footer {
-            border-top: none;
-        }
-    </style>
+    <link href="../../assets/cari/tedarikciler.css" rel="stylesheet">
 </head>
 
 <body>

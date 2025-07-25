@@ -1,3 +1,71 @@
+<?php
+session_start();
+
+// DB bağlantısı
+$host = 'localhost';
+$dbname = 'deneme_db';
+$user = 'root';
+$pass = 'akdere';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
+$userEmail = $_SESSION['email'] ?? 'default@email.com';
+$userName = 'Miraç Deprem';
+$companyName = 'Atia Yazılım';
+
+if (isset($pdo)) {
+    try {
+        $stmt = $pdo->prepare("SELECT u.email, u.username, c.name as company_name 
+                               FROM users u 
+                               JOIN companies c ON u.company_id = c.id 
+                               WHERE u.email = ?");
+        $stmt->execute([$userEmail]);
+        $userData = $stmt->fetch();
+
+        if ($userData) {
+            $userEmail = $userData['email'];
+            $userName = $userData['username'] ?? 'Varsayılan Ad';
+            $companyName = $userData['company_name'] ?? 'Varsayılan Şirket';
+        }
+    } catch (PDOException $e) {
+        error_log("Kullanıcı bilgileri alınamadı: " . $e->getMessage());
+    }
+}
+
+// Form gönderilmişse
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kaydet'])) {
+    $kaynak_depo_id = $_POST['kaynak_depo_id'];
+    $hedef_depo_id = $_POST['hedef_depo_id'];
+    $aciklama = $_POST['aciklama'];
+    $tarih = date('Y-m-d H:i:s');
+
+    $stmt = $pdo->prepare("INSERT INTO depo_transferleri (tarih, kaynak_depo_id, hedef_depo_id, aciklama) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$tarih, $kaynak_depo_id, $hedef_depo_id, $aciklama]);
+
+  
+
+    header("Location: " . $_SERVER['PHP_SELF'] . "?ok=1");
+    exit;
+}
+
+// Depoları çek (form ve liste için)
+$depolar = $pdo->query("SELECT id, ad FROM depolar")->fetchAll();
+
+// Transferleri çek (liste için)
+$transferler = $pdo->query("
+    SELECT t.id, t.tarih, d1.ad AS cikis_depo, d2.ad AS giris_depo, t.aciklama
+    FROM depo_transferleri t
+    JOIN depolar d1 ON t.kaynak_depo_id = d1.id
+    JOIN depolar d2 ON t.hedef_depo_id = d2.id
+    ORDER BY t.tarih DESC
+")->fetchAll();
+?>
+
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -7,122 +75,112 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="../dashboard.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            padding: 30px;
-            margin-left: 280px;
-            position: relative; /* Add this to make absolute positioning work relative to the container */
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left {
-            display: flex;
-            gap: 10px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        input[type="text"] {
-            padding: 6px;
-            font-size: 14px;
-            width: 900px;
-        }
-
-        .button {
-            background-color: #444;
-            color: #fff;
-            border: none;
-            padding: 8px 14px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .table {
-            margin-top: 30px;
-            background: white;
-            border-radius: 6px;
-            padding: 20px;
-        }
-
-        .table-header {
-            display: flex;
-            font-weight: bold;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .table-header div,
-        .empty-row div {
-            flex: 1;
-        }
-
-        .empty-row {
-            text-align: center;
-            padding: 50px 0;
-            color: #888;
-        }
-
-        /* New CSS for positioning the profile dropdown */
-        .profile-dropdown-container {
-            position: absolute;
-            top: 30px; /* Adjust as needed for vertical alignment */
-            right: 30px; /* Adjust as needed for horizontal alignment */
-            z-index: 1000; /* Ensure it's above other elements if necessary */
-        }
-    </style>
+    <link href="../../assets/stok/depolar_arasi_transfer.css" rel="stylesheet">
 </head>
 
 <body>
     <?php include __DIR__ . '/../sidebar.php'; ?>
-    <div class="container">
-        <h2 class="page-title">Depolar Arası Transfer</h2>
+  
+        <div class="main-content p-4">
+        <!-- Üst Header -->
+        <div class="top-header">
+            <div class="header-left">
+            <h1>Depolar Arası Transferler</h1>
+        </div>
+            <div class="header-right">
+        <?php include __DIR__ . '/../includes/profile_dropdown.php'; ?>
+        </div>
+    </div>
+
+       
         <div class="header">
             <div class="header-left">
                 <button class="button">Filtrele</button>
                 <input type="text" placeholder="Ara...">
             </div>
-
             <div class="header-right">
-                <button class="button">Yeni Transfer Fişi Oluştur</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transferFormModal">
+                    Yeni Transfer Fişi Oluştur
+                </button>
             </div>
         </div>
-
-        <div class="profile-dropdown-container">
-            <?php include __DIR__ . '/../includes/profile_dropdown.php'; ?>
-        </div>
-
 
         <div class="table">
             <div class="table-header">
-                <div>Hareket İsmi</div>
+                <div>ID</div>
                 <div>Çıkış Deposu</div>
                 <div>Giriş Deposu</div>
                 <div>Düzenleme Tarihi</div>
+                <div>Açıklama</div>
             </div>
-            <div class="empty-row">
-                <div style="flex: 1;">Depolar Arası Transfer sayfasına hoş geldiniz! <br> MUTABIK 'a kaydedeceğiniz depo
-                    transfer fişlerinize bu sayfadan ulaşacaksınız.</div>
-            </div>
+
+            <?php if (count($transferler) > 0): ?>
+                <?php foreach ($transferler as $transfer): ?>
+                    <div class="table-row d-flex border-bottom py-2">
+                        <div class="flex-fill"><?= htmlspecialchars($transfer['id']) ?></div>
+                        <div class="flex-fill"><?= htmlspecialchars($transfer['cikis_depo']) ?></div>
+                        <div class="flex-fill"><?= htmlspecialchars($transfer['giris_depo']) ?></div>
+                        <div class="flex-fill"><?= htmlspecialchars($transfer['tarih']) ?></div>
+                        <div class="flex-fill"><?= htmlspecialchars($transfer['aciklama']) ?></div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="empty-row">
+                    <div>Henüz transfer kaydı bulunmamaktadır.</div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
+
+    <!-- Transfer Ekle Modal -->
+<div class="modal fade" id="transferFormModal" tabindex="-1" aria-labelledby="transferFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <form method="POST" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="transferFormModalLabel">Yeni Transfer Fişi Oluştur</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="kaynakDepo" class="form-label">Çıkış Deposu</label>
+            <select name="kaynak_depo_id" id="kaynakDepo" class="form-select" required>
+              <option value="">Seçiniz</option>
+              <?php foreach ($depolar as $depo): ?>
+                <option value="<?= $depo['id'] ?>"><?= htmlspecialchars($depo['ad']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="hedefDepo" class="form-label">Giriş Deposu</label>
+            <select name="hedef_depo_id" id="hedefDepo" class="form-select" required>
+              <option value="">Seçiniz</option>
+              <?php foreach ($depolar as $depo): ?>
+                <option value="<?= $depo['id'] ?>"><?= htmlspecialchars($depo['ad']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label for="aciklama" class="form-label">Açıklama</label>
+            <textarea name="aciklama" id="aciklama" rows="3" class="form-control" placeholder="İsteğe bağlı bir açıklama girin..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+        <button type="submit" name="kaydet" class="btn btn-primary">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../script2.js"></script>
 </body>
 
 </html>
+

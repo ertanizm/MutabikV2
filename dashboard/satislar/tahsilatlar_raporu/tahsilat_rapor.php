@@ -17,47 +17,7 @@ $companyName = 'Atia Yazılım';
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../dashboard.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-        .report-filter-bar {
-            background-color: var(--card-bg);
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .report-filter-bar .form-select,
-        .report-filter-bar .form-control {
-            max-width: 200px;
-        }
-        .report-table-section .table {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .report-table-section .table thead {
-            background-color: var(--sidebar-bg);
-            color: white;
-        }
-        .report-table-section .table th,
-        .report-table-section .table td {
-            vertical-align: middle;
-        }
-        .report-table-section .table tbody tr:nth-child(even) {
-            background-color: #f0f2f5;
-        }
-        .report-table-section .table-bordered {
-            border: 1px solid var(--border-color);
-        }
-        @media (min-width: 769px) {
-            .main-content {
-                margin-left: 280px;
-            }
-        }
-    </style>
+    <link href="../../../assets/satislar/tahsilatlar_raporu/tahsilat_rapor.css" rel="stylesheet">
 </head>
 <body style="background-color: #f8f9fa;">
     <?php include '../../sidebar.php'; ?>

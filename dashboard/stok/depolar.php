@@ -11,31 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <!-- Özel CSS -->
     <link rel="stylesheet" href="../dashboard.css" />
-    <style>
-
-        /* Top Header */
-    .top-header {
-    background-color: white;
-    padding: 15px 25px;
-    border-bottom: 1px solid var(--border-color, #ddd);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    }
-
-    .header-left h1 {
-    font-size: 24px;
-    color: var(--text-primary, #333);
-    margin: 0;
-    }
-
-    .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    }
-
-    </style>
+    <link rel="stylesheet" href="../../assets/stok/depolar.css">
 </head>
 <body>
     <?php include __DIR__ . '/../sidebar.php'; ?>
