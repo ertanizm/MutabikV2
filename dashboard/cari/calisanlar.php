@@ -176,7 +176,7 @@ if (isset($pdo)) {
         </div>
        
         <div class="customer-actions-bar">
-            <input type="text" class="form-control search-box" placeholder="Müşteri Ara...">
+            <input type="text" class="form-control search-box" id="customerSearch" placeholder="Çalışan Ara...">
             <div>
                 <button class="btn btn-info text-white me-2">
                     <i class="fas fa-file-export"></i> Dışa Aktar
@@ -193,7 +193,7 @@ if (isset($pdo)) {
                 Çalışan Listesi
             </h2>
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" id="customerTable">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -403,6 +403,31 @@ if (isset($pdo)) {
     });
   });
 });
+
+    const input = document.getElementById("customerSearch");
+    const tbody = document.querySelector("#customerTable tbody");
+
+    input.addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.sort((a, b) => {
+            const aText = a.textContent.toLowerCase();
+            const bText = b.textContent.toLowerCase();
+
+            const aIndex = aText.indexOf(query);
+            const bIndex = bText.indexOf(query);
+
+            // Uyum sırasına göre sırala (başta geçen yukarı)
+            if (aIndex === -1) return 1;
+            if (bIndex === -1) return -1;
+            return aIndex - bIndex;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    });
+
+
   });
 </script>
 
