@@ -3,9 +3,9 @@ date_default_timezone_set('Europe/Istanbul');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../../lib/phpmailer/Exception.php';
-require '../../lib/phpmailer/PHPMailer.php';
-require '../../lib/phpmailer/SMTP.php';
+require '../lib/phpmailer/Exception.php';
+require '../lib/phpmailer/PHPMailer.php';
+require '../lib/phpmailer/SMTP.php';
 
 // Veritabanı bağlantısı
 $servername = "localhost";
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update = "UPDATE users SET reset_token = '$token', reset_token_expire = '$expires' WHERE email = '$email'";
         $conn->query($update);
 
-        $reset_link = "http://localhost/project/MutabikV2/public/authentication/reset_password.php?token=$token";
+        $reset_link = "http://localhost/MutabikV2/public/authentication/reset_password.php?token=$token";
 
         // PHPMailer ile mail gönderimi
         $mail = new PHPMailer(true);

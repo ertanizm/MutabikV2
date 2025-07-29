@@ -115,17 +115,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Sayfalama ayarları
+$limit = 5; // Her sayfada kaç kayıt gösterilecek
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = max($page, 1); // 1'den küçükse düzelt
+$offset = ($page - 1) * $limit;
 
+$totalRecords = 0;
+
+try {
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM cariler WHERE tip = 'calisan'");
+    $totalRecords = (int)$stmt->fetch()['total'];
+} catch (PDOException $e) {
+    error_log("Toplam kayıt alınamadı: " . $e->getMessage());
+}
+$totalPages = ceil($totalRecords / $limit);
 
 // Veritabanından müşteri verilerini çekiyoruz
 $employees = [];
 if (isset($pdo)) {
     try {
-        $stmt = $pdo->query("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce, aciklama FROM cariler WHERE tip = 'calisan' ORDER BY id ASC");
-        $employees = $stmt->fetchAll();
-    } catch (PDOException $e) {
-        error_log("Çalışan verileri alınamadı: " . $e->getMessage());
-    }
+    $stmt = $pdo->prepare("SELECT id, isim, vergi_no, email, telefon, adres, il, ilce, aciklama 
+                           FROM cariler 
+                           WHERE tip = 'calisan' 
+                           ORDER BY id ASC 
+                           LIMIT :limit OFFSET :offset");
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $employees = $stmt->fetchAll();
+} catch (PDOException $e) {
+    error_log("Çalışan verileri alınamadı: " . $e->getMessage());
+}
 }
 ?>
 
@@ -229,13 +250,23 @@ if (isset($pdo)) {
                 </table>
             </div>
             <nav aria-label="Müşteri Sayfalama" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled"><a class="page-link" href="#">Önceki</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Sonraki</a></li>
-                </ul>
+               <ul class="pagination justify-content-center">
+        <!-- Önceki -->
+        <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page - 1 ?>">Önceki</a>
+        </li>
+
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+            </li>
+        <?php endfor; ?>
+
+        <!-- Sonraki -->
+        <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
+            <a class="page-link" href="?page=<?= $page + 1 ?>">Sonraki</a>
+        </li>
+    </ul>
             </nav>
         </div>
     </div>
