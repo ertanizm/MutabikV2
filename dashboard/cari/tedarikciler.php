@@ -1,12 +1,48 @@
 <?php
 // 1. Veritabanı bağlantısı
 $host = 'localhost';
-$dbname = 'deneme_db'; // Veritabanı adını kendi projenle aynı yap
+$dbname = 'abc_db'; // Veritabanı adını kendi projenle aynı yap
 $user = 'root';
-$pass = 'akdere'; // XAMPP kullanıyorsan genellikle boş olur
+$pass = ''; // XAMPP kullanıyorsan genellikle boş olur
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+    // Sayfalama ayarları
+    $limit = 2; // Her sayfada gösterilecek kayıt sayısı
+    $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    $start = ($page - 1) * $limit;
+
+    // Toplam kayıt sayısı
+    $totalStmt = $pdo->query("SELECT COUNT(*) FROM cariler WHERE tip = 'tedarikci'");
+    $total = $totalStmt->fetchColumn();
+    $pages = ceil($total / $limit);
+
+    // Sayfaya göre tedarikçileri getir
+    $stmt = $pdo->prepare("SELECT * FROM cariler WHERE tip = 'tedarikci' ORDER BY id ASC LIMIT :start, :limit");
+    $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (isset($_GET['export']) && $_GET['export'] == 'csv') {
+        $stmt = $pdo->prepare("SELECT isim, vergi_no, email, telefon, adres, il, ilce, aciklama FROM cariler WHERE tip = 'tedarikci'");
+        $stmt->execute();
+        $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=tedarikciler.csv');
+
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Adı', 'Vergi No', 'E-posta', 'Telefon', 'Adres', 'İl', 'İlçe', 'Açıklama']);
+
+        foreach ($suppliers as $supplier) {
+            fputcsv($output, $supplier);
+        }
+
+        fclose($output);
+        exit;
+    }
+
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
@@ -60,8 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_supplier'])) {
     echo "<script>alert('Tedarikçi başarıyla güncellendi!'); window.location.href='tedarikciler.php';</script>";
     exit;
 }
-$stmt = $pdo->query("SELECT * FROM cariler ORDER BY id ASC");
-$suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -92,11 +127,12 @@ $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="customer-actions-bar">
-            <input type="text" class="form-control search-box" placeholder="Müşteri Ara...">
+            <input type="text" id="searchInput" class="form-control search-box" placeholder="Tedarikçi Ara...">
             <div>
-                <button class="btn btn-info text-white me-2">
+                <a href="tedarikciler.php?export=csv" class="btn btn-info text-white me-2">
                     <i class="fas fa-file-export"></i> Dışa Aktar
-                </button>
+                </a>
+
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
                     <i class="fas fa-plus"></i> Yeni Tedarikçi Ekle
                 </button>
@@ -109,7 +145,7 @@ $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 Tedarikçi Listesi
             </h2>
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" id="supplierTable">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -123,7 +159,7 @@ $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                     </thead>
                     <tbody>
-                    <tbody>
+
                         <?php foreach ($suppliers as $index => $supplier): ?>
                             <tr>
                                 <td><?= $index + 1 ?></td>
@@ -133,7 +169,7 @@ $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td><?= htmlspecialchars($supplier['telefon']) ?></td>
                                 <td><?= htmlspecialchars($supplier['adres']) ?></td>
                                 <td><?= htmlspecialchars($supplier['aciklama']) ?></td>
-                               <td class="action-buttons">
+                                <td class="action-buttons">
                                     <!-- Düzenle Butonu -->
                                     <button class="btn btn-sm btn-warning me-1" title="Düzenle" data-bs-toggle="modal"
                                         data-bs-target="#editModal<?= $supplier['id'] ?>">
@@ -236,13 +272,26 @@ $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <nav aria-label="Müşteri Sayfalama" class="mt-4">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled"><a class="page-link" href="#">Önceki</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Sonraki</a></li>
+                    <?php if ($page > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<?= $page - 1 ?>">Önceki</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php for ($i = 1; $i <= $pages; $i++): ?>
+                        <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php if ($page < $pages): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<?= $page + 1 ?>">Sonraki</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </nav>
+
         </div>
     </div>
 
@@ -305,9 +354,31 @@ $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#supplierTable tbody tr");
+            let firstMatchFound = false;
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const match = text.includes(filter);
+                row.style.display = match ? "" : "none";
+
+                // İlk eşleşen satıra scroll yap
+                if (match && !firstMatchFound) {
+                    row.scrollIntoView({ behavior: "smooth", block: "center" });
+                    firstMatchFound = true;
+                }
+            });
+        });
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../script2.js"></script>
+
+  
 
 </body>
 
