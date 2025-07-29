@@ -1,12 +1,6 @@
 <?php
 session_start();
 
-// Session kontrolü
-if (!isset($_SESSION['email'])) {
-    header("Location: ../../authentication/login.php");
-    exit();
-}
-
 // Statik kullanıcı bilgileri
 $userName = 'Kullanıcı';
 $companyName = 'Şirket';
