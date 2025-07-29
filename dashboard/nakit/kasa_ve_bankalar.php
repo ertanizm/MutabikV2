@@ -7,36 +7,77 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
-// Kullanıcı bilgilerini veritabanından al
-$host = 'localhost';
-$dbname = 'deneme_db';
-$user = 'root';
-$pass = '';
+// Statik kullanıcı bilgileri
+$userName = 'Kullanıcı';
+$companyName = 'Şirket';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    $stmt = $pdo->prepare("SELECT u.email, u.username, c.name as company_name 
-                           FROM users u 
-                           JOIN companies c ON u.company_id = c.id 
-                           WHERE u.email = ?");
-    $stmt->execute([$_SESSION['email']]);
-    $userData = $stmt->fetch();
+// Statik veriler
+$hesaplar = [
+    [
+        'id' => 1,
+        'hesap_adi' => 'Merkez Kasa',
+        'tur' => 'Kasa',
+        'bakiye' => 5000.00,
+        'banka_adi' => null,
+        'iban' => null,
+        'son_islem_tarihi' => '2024-06-28',
+        'aciklama' => 'Ana kasa hesabı'
+    ],
+    [
+        'id' => 2,
+        'hesap_adi' => 'Şube Kasa',
+        'tur' => 'Kasa',
+        'bakiye' => 2500.00,
+        'banka_adi' => null,
+        'iban' => null,
+        'son_islem_tarihi' => '2024-06-27',
+        'aciklama' => 'Şube kasa hesabı'
+    ],
+    [
+        'id' => 3,
+        'hesap_adi' => 'Ziraat Bankası',
+        'tur' => 'Banka',
+        'bakiye' => 15000.00,
+        'banka_adi' => 'Ziraat Bankası',
+        'iban' => 'TR12 0001 0000 1234 5678 0000 01',
+        'son_islem_tarihi' => '2024-06-26',
+        'aciklama' => 'Ana banka hesabı'
+    ],
+    [
+        'id' => 4,
+        'hesap_adi' => 'İş Bankası',
+        'tur' => 'Banka',
+        'bakiye' => 12000.00,
+        'banka_adi' => 'İş Bankası',
+        'iban' => 'TR33 0006 1005 1978 6457 8412 34',
+        'son_islem_tarihi' => '2024-06-25',
+        'aciklama' => 'İş bankası hesabı'
+    ],
+    [
+        'id' => 5,
+        'hesap_adi' => 'Garanti Bankası',
+        'tur' => 'Banka',
+        'bakiye' => 8000.00,
+        'banka_adi' => 'Garanti BBVA',
+        'iban' => 'TR66 0006 2000 0000 0000 0000 00',
+        'son_islem_tarihi' => '2024-06-24',
+        'aciklama' => 'Garanti hesabı'
+    ]
+];
 
-    if ($userData) {
-        $userName = $userData['username'] ?? 'Kullanıcı';
-        $companyName = $userData['company_name'] ?? 'Şirket';
+// Toplam bakiyeleri hesapla
+$toplamKasa = 0;
+$toplamBanka = 0;
+foreach ($hesaplar as $hesap) {
+    if ($hesap['tur'] == 'Kasa') {
+        $toplamKasa += $hesap['bakiye'];
     } else {
-        $userName = 'Kullanıcı';
-        $companyName = 'Şirket';
+        $toplamBanka += $hesap['bakiye'];
     }
-} catch (PDOException $e) {
-    $userName = 'Kullanıcı';
-    $companyName = 'Şirket';
 }
+$toplamVarlik = $toplamKasa + $toplamBanka;
 
-// CRUD İşlemleri
+// CRUD İşlemleri (Statik)
 $message = '';
 $messageType = '';
 
@@ -50,30 +91,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $aciklama = trim($_POST['aciklama'] ?? '');
     
     if (!empty($hesap_adi)) {
-        try {
-            $stmt = $pdo->prepare("INSERT INTO kasa_bankalar (hesap_adi, tur, bakiye, banka_adi, iban, son_islem_tarihi, aciklama) VALUES (?, ?, ?, ?, ?, CURDATE(), ?)");
-            $stmt->execute([$hesap_adi, $tur, $bakiye, $banka_adi, $iban, $aciklama]);
-            $message = "Hesap başarıyla eklendi!";
-            $messageType = "success";
-        } catch (PDOException $e) {
-            $message = "Hata: " . $e->getMessage();
-            $messageType = "error";
+        // Yeni hesap ekle
+        $yeniHesap = [
+            'id' => count($hesaplar) + 1,
+            'hesap_adi' => $hesap_adi,
+            'tur' => $tur,
+            'bakiye' => $bakiye,
+            'banka_adi' => $banka_adi ?: null,
+            'iban' => $iban ?: null,
+            'son_islem_tarihi' => date('Y-m-d'),
+            'aciklama' => $aciklama
+        ];
+        $hesaplar[] = $yeniHesap;
+        
+        // Toplam bakiyeleri güncelle
+        $toplamKasa = 0;
+        $toplamBanka = 0;
+        foreach ($hesaplar as $hesap) {
+            if ($hesap['tur'] == 'Kasa') {
+                $toplamKasa += $hesap['bakiye'];
+            } else {
+                $toplamBanka += $hesap['bakiye'];
+            }
         }
+        $toplamVarlik = $toplamKasa + $toplamBanka;
+        
+        $message = "Hesap başarıyla eklendi!";
+        $messageType = "success";
     }
 }
 
 // Silme İşlemi
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    try {
-        $stmt = $pdo->prepare("DELETE FROM kasa_bankalar WHERE id = ?");
-        $stmt->execute([$id]);
-        $message = "Hesap başarıyla silindi!";
-        $messageType = "success";
-    } catch (PDOException $e) {
-        $message = "Hata: " . $e->getMessage();
-        $messageType = "error";
+    $hesaplar = array_filter($hesaplar, function($hesap) use ($id) {
+        return $hesap['id'] != $id;
+    });
+    
+    // Toplam bakiyeleri güncelle
+    $toplamKasa = 0;
+    $toplamBanka = 0;
+    foreach ($hesaplar as $hesap) {
+        if ($hesap['tur'] == 'Kasa') {
+            $toplamKasa += $hesap['bakiye'];
+        } else {
+            $toplamBanka += $hesap['bakiye'];
+        }
     }
+    $toplamVarlik = $toplamKasa + $toplamBanka;
+    
+    $message = "Hesap başarıyla silindi!";
+    $messageType = "success";
 }
 
 // Güncelleme İşlemi
@@ -87,40 +155,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     $aciklama = trim($_POST['aciklama'] ?? '');
     
     if (!empty($hesap_adi)) {
-        try {
-            $stmt = $pdo->prepare("UPDATE kasa_bankalar SET hesap_adi = ?, tur = ?, bakiye = ?, banka_adi = ?, iban = ?, son_islem_tarihi = CURDATE(), aciklama = ? WHERE id = ?");
-            $stmt->execute([$hesap_adi, $tur, $bakiye, $banka_adi, $iban, $aciklama, $id]);
-            $message = "Hesap başarıyla güncellendi!";
-            $messageType = "success";
-        } catch (PDOException $e) {
-            $message = "Hata: " . $e->getMessage();
-            $messageType = "error";
+        // Hesabı güncelle
+        foreach ($hesaplar as &$hesap) {
+            if ($hesap['id'] == $id) {
+                $hesap['hesap_adi'] = $hesap_adi;
+                $hesap['tur'] = $tur;
+                $hesap['bakiye'] = $bakiye;
+                $hesap['banka_adi'] = $banka_adi ?: null;
+                $hesap['iban'] = $iban ?: null;
+                $hesap['son_islem_tarihi'] = date('Y-m-d');
+                $hesap['aciklama'] = $aciklama;
+                break;
+            }
         }
-    }
-}
-
-// Verileri çek
-try {
-    $stmt = $pdo->query("SELECT * FROM kasa_bankalar ORDER BY tur, hesap_adi");
-    $hesaplar = $stmt->fetchAll();
-    
-    // Toplam bakiyeleri hesapla
-    $toplamKasa = 0;
-    $toplamBanka = 0;
-    foreach ($hesaplar as $hesap) {
-        if ($hesap['tur'] == 'Kasa') {
-            $toplamKasa += $hesap['bakiye'];
-        } else {
-            $toplamBanka += $hesap['bakiye'];
+        
+        // Toplam bakiyeleri güncelle
+        $toplamKasa = 0;
+        $toplamBanka = 0;
+        foreach ($hesaplar as $hesap) {
+            if ($hesap['tur'] == 'Kasa') {
+                $toplamKasa += $hesap['bakiye'];
+            } else {
+                $toplamBanka += $hesap['bakiye'];
+            }
         }
+        $toplamVarlik = $toplamKasa + $toplamBanka;
+        
+        $message = "Hesap başarıyla güncellendi!";
+        $messageType = "success";
     }
-    $toplamVarlik = $toplamKasa + $toplamBanka;
-    
-} catch (PDOException $e) {
-    $hesaplar = [];
-    $toplamKasa = 0;
-    $toplamBanka = 0;
-    $toplamVarlik = 0;
 }
 ?>
 <!DOCTYPE html>
@@ -406,25 +469,24 @@ try {
 
     // Hesap düzenleme fonksiyonu
     function editAccount(id) {
-        // AJAX ile hesap bilgilerini getir
-        fetch(`get_account_deneme_db.php?id=${id}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('edit_id').value = data.id;
-                document.getElementById('edit_hesap_adi').value = data.hesap_adi;
-                document.getElementById('edit_tur').value = data.tur;
-                document.getElementById('edit_bakiye').value = data.bakiye;
-                document.getElementById('edit_banka_adi').value = data.banka_adi || '';
-                document.getElementById('edit_iban').value = data.iban || '';
-                document.getElementById('edit_aciklama').value = data.aciklama || '';
-                
-                new bootstrap.Modal(document.getElementById('editAccountModal')).show();
-            })
-            .catch(error => {
-                console.error('Hata:', error);
-                alert('Hesap bilgileri alınamadı!');
-            });
+        // Statik verilerden hesap bilgilerini bul
+        const hesapData = <?php echo json_encode($hesaplar); ?>;
+        const hesap = hesapData.find(h => h.id == id);
+        
+        if (hesap) {
+            document.getElementById('edit_id').value = hesap.id;
+            document.getElementById('edit_hesap_adi').value = hesap.hesap_adi;
+            document.getElementById('edit_tur').value = hesap.tur;
+            document.getElementById('edit_bakiye').value = hesap.bakiye;
+            document.getElementById('edit_banka_adi').value = hesap.banka_adi || '';
+            document.getElementById('edit_iban').value = hesap.iban || '';
+            document.getElementById('edit_aciklama').value = hesap.aciklama || '';
+            
+            new bootstrap.Modal(document.getElementById('editAccountModal')).show();
+        } else {
+            alert('Hesap bulunamadı!');
+        }
     }
     </script>
 </body>
-</html> 
+</html>
