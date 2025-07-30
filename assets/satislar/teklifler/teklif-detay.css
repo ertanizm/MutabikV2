@@ -1,0 +1,541 @@
+/* Teklif Detay Sayfası CSS */
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #dee2e6;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --bg-light: #f8f9fa;
+    --shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Ana Layout */
+.content-wrapper {
+    display: flex;
+    gap: 30px;
+    margin: 20px;
+    min-height: calc(100vh - 120px);
+}
+
+.main-content-area {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 30px;
+}
+
+.right-sidebar {
+    width: 350px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    height: fit-content;
+    align-self: flex-start;
+}
+
+/* Header */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-left h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.header-left h1 i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-right .btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Form Sections */
+.teklif-bilgileri {
+    margin-bottom: 30px;
+}
+
+.form-section {
+    margin-bottom: 25px;
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-label i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: var(--bg-light);
+    color: var(--text-secondary);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Date Section */
+.date-section {
+    display: flex;
+    gap: 20px;
+}
+
+.date-group {
+    flex: 1;
+}
+
+/* Products Section */
+.products-section {
+    margin-bottom: 30px;
+}
+
+.products-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.products-table th {
+    background: var(--bg-light);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.products-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+.product-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.total-cell {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Totals Section */
+.totals-section {
+    margin-bottom: 30px;
+}
+
+.totals-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.totals-table tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.totals-table tr:last-child {
+    border-bottom: none;
+}
+
+.totals-table td {
+    padding: 12px 16px;
+    font-size: 14px;
+}
+
+.totals-table td:first-child {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.totals-table td:last-child {
+    font-weight: 600;
+    text-align: right;
+    color: var(--text-primary);
+}
+
+.grand-total {
+    background: var(--bg-light);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.grand-total td:last-child {
+    color: var(--primary-color);
+}
+
+/* Action Buttons */
+.action-buttons-section {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding-top: 25px;
+    border-top: 2px solid var(--border-color);
+}
+
+.btn-secondary, .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background: var(--light-color);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Right Sidebar */
+.sidebar-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.sidebar-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+}
+
+/* Sidebar Buttons */
+.btn-sidebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background: var(--light-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-sidebar:hover {
+    background: var(--border-color);
+}
+
+.btn-sidebar-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-sidebar-primary:hover {
+    background: #0056b3;
+}
+
+/* Status */
+.status-indicator {
+    margin-bottom: 15px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-cevap-bekleniyor {
+    background: var(--warning-color);
+    color: #856404;
+}
+
+.status-kabul-edildi {
+    background: var(--success-color);
+    color: white;
+}
+
+.status-reddedildi {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* Status Options */
+.status-options {
+    margin-bottom: 15px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.radio-option span {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.btn-save {
+    width: 100%;
+    padding: 10px 16px;
+    background: var(--success-color);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    background: #218838;
+}
+
+/* History Tabs */
+.history-tabs {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* History Content */
+.history-content {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.history-date {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Not Ekleme Formu */
+.note-form {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--bg-light);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.note-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.note-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-cancel {
+    padding: 8px 16px;
+    background: var(--light-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: var(--border-color);
+}
+
+.btn-add-note {
+    width: 100%;
+    padding: 10px 16px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-add-note:hover {
+    background: #0056b3;
+}
+
+.note-item {
+    background: #fff3cd;
+    border-left: 3px solid var(--warning-color);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+    
+    .right-sidebar {
+        width: 100%;
+    }
+    
+    .date-section {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content-area {
+        padding: 20px;
+    }
+    
+    .right-sidebar {
+        padding: 15px;
+    }
+    
+    .action-buttons-section {
+        flex-direction: column;
+    }
+    
+    .btn-secondary, .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+} 

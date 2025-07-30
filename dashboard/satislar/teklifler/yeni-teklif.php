@@ -667,43 +667,47 @@ $today = date('d.m.Y');
                         <tr class="product-row">
                             <td>
                                 <div class="input-with-icon">
-                                    <input type="text" class="form-control" placeholder="Ürün/Hizmet adı">
+                                    <input type="text" class="form-control product-name" placeholder="Ürün/Hizmet adı" oninput="searchProducts(this)" onfocus="showProductDropdown(this)">
                                     <i class="fas fa-search"></i>
+                                    <div class="product-dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; max-height: 200px; overflow-y: auto; z-index: 1000;"></div>
                                 </div>
                             </td>
                             <td>
-                                <input type="number" class="quantity-input" value="1.00" step="0.01" min="0">
+                                <input type="number" class="quantity-input" value="1.00" step="0.01" min="0" oninput="updateProductData(this)">
                             </td>
                             <td>
-                                <select class="unit-select">
+                                <select class="unit-select" onchange="updateProductData(this)">
                                     <option>Adet</option>
                                     <option>Kg</option>
                                     <option>Metre</option>
                                     <option>Saat</option>
                                     <option>Gün</option>
+                                    <option>Proje</option>
+                                    <option>Aylık</option>
+                                    <option>Paket</option>
                                 </select>
                             </td>
                             <td>
-                                <input type="number" class="price-input" value="0.00" step="0.01" min="0">
+                                <input type="number" class="price-input" value="0.00" step="0.01" min="0" oninput="updateProductData(this)">
                                 <span style="margin-left: 5px;">₺</span>
                             </td>
                             <td>
-                                <select class="tax-select">
-                                    <option>KDV %20</option>
-                                    <option>KDV %10</option>
-                                    <option>KDV %8</option>
-                                    <option>KDV %1</option>
-                                    <option>KDV %0</option>
+                                <select class="tax-select" onchange="updateProductData(this)">
+                                    <option value="20">KDV %20</option>
+                                    <option value="10">KDV %10</option>
+                                    <option value="8">KDV %8</option>
+                                    <option value="1">KDV %1</option>
+                                    <option value="0">KDV %0</option>
                                 </select>
                             </td>
                             <td class="total-cell">
                                 0,00 ₺
                             </td>
                             <td class="action-buttons-cell">
-                                <button type="button" class="btn-icon">
+                                <button type="button" class="btn-icon" onclick="addProductRow(this)">
                                     <i class="fas fa-plus"></i>
                                 </button>
-                                <button type="button" class="btn-icon">
+                                <button type="button" class="btn-icon" onclick="removeProductRow(this)">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </td>
@@ -725,22 +729,442 @@ $today = date('d.m.Y');
                 <table class="totals-table">
                     <tr>
                         <td>ARA TOPLAM</td>
-                        <td>0,00₺</td>
+                        <td id="araToplam">0,00₺</td>
                     </tr>
                     <tr>
                         <td>TOPLAM KDV</td>
-                        <td>0,00₺</td>
+                        <td id="toplamKdv">0,00₺</td>
                     </tr>
                     <tr class="grand-total">
                         <td>GENEL TOPLAM</td>
-                        <td>0,00₺</td>
+                        <td id="genelToplam">0,00₺</td>
                     </tr>
                 </table>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons" style="margin-top: 30px; justify-content: center;">
+                <button type="button" class="btn-outline" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i>
+                    GERİ DÖN
+                </button>
+                <button type="button" class="btn-primary" onclick="createTeklif()">
+                    <i class="fas fa-check"></i>
+                    TEKLİF OLUŞTUR
+                </button>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../script2.js"></script>
+    
+    <script>
+        // Global değişkenler
+        let teklifData = {
+            isim: '',
+            musteri: '',
+            duzenlemeTarihi: '',
+            vadeTarihi: '',
+            kosullar: '',
+            urunler: []
+        };
+
+        // Varsayılan ürün verileri
+        const varsayilanUrunler = [
+            { id: 1, isim: 'Web Sitesi Geliştirme', birim: 'Proje', fiyat: 5000.00, kdv: 20 },
+            { id: 2, isim: 'Mobil Uygulama Geliştirme', birim: 'Proje', fiyat: 15000.00, kdv: 20 },
+            { id: 3, isim: 'E-ticaret Sistemi', birim: 'Proje', fiyat: 8000.00, kdv: 20 },
+            { id: 4, isim: 'SEO Hizmeti', birim: 'Aylık', fiyat: 1500.00, kdv: 20 },
+            { id: 5, isim: 'Sosyal Medya Yönetimi', birim: 'Aylık', fiyat: 2000.00, kdv: 20 },
+            { id: 6, isim: 'Logo Tasarımı', birim: 'Adet', fiyat: 500.00, kdv: 20 },
+            { id: 7, isim: 'Kurumsal Kimlik Tasarımı', birim: 'Paket', fiyat: 2500.00, kdv: 20 },
+            { id: 8, isim: 'Dijital Reklam Yönetimi', birim: 'Aylık', fiyat: 3000.00, kdv: 20 },
+            { id: 9, isim: 'İçerik Yazarlığı', birim: 'Adet', fiyat: 200.00, kdv: 20 },
+            { id: 10, isim: 'Video Düzenleme', birim: 'Saat', fiyat: 150.00, kdv: 20 },
+            { id: 11, isim: 'Sistem Bakım ve Destek', birim: 'Aylık', fiyat: 1000.00, kdv: 20 },
+            { id: 12, isim: 'Veritabanı Optimizasyonu', birim: 'Proje', fiyat: 3000.00, kdv: 20 },
+            { id: 13, isim: 'Güvenlik Testi', birim: 'Proje', fiyat: 4000.00, kdv: 20 },
+            { id: 14, isim: 'API Geliştirme', birim: 'Saat', fiyat: 250.00, kdv: 20 },
+            { id: 15, isim: 'Cloud Sunucu Kurulumu', birim: 'Proje', fiyat: 2000.00, kdv: 20 }
+        ];
+
+        // Varsayılan müşteri verileri
+        const varsayilanMusteriler = [
+            { id: 1, ad: 'ABC Teknoloji A.Ş.', telefon: '0212 123 45 67', email: 'info@abc.com', adres: 'İstanbul, Türkiye' },
+            { id: 2, ad: 'XYZ Yazılım Ltd.', telefon: '0216 987 65 43', email: 'contact@xyz.com', adres: 'Ankara, Türkiye' },
+            { id: 3, ad: 'DEF Mağazaları', telefon: '0312 456 78 90', email: 'info@def.com', adres: 'İzmir, Türkiye' },
+            { id: 4, ad: 'GHI Holding', telefon: '0224 111 22 33', email: 'info@ghi.com', adres: 'Bursa, Türkiye' },
+            { id: 5, ad: 'JKL E-ticaret', telefon: '0232 444 55 66', email: 'info@jkl.com', adres: 'İzmir, Türkiye' },
+            { id: 6, ad: 'MNO Reklam Ajansı', telefon: '0242 777 88 99', email: 'info@mno.com', adres: 'Antalya, Türkiye' },
+            { id: 7, ad: 'PQR Danışmanlık', telefon: '0258 333 44 55', email: 'info@pqr.com', adres: 'Denizli, Türkiye' },
+            { id: 8, ad: 'STU Eğitim Kurumu', telefon: '0262 666 77 88', email: 'info@stu.com', adres: 'Kocaeli, Türkiye' },
+            { id: 9, ad: 'VWX Sağlık Hizmetleri', telefon: '0274 999 00 11', email: 'info@vwx.com', adres: 'Eskişehir, Türkiye' },
+            { id: 10, ad: 'YZM Turizm', telefon: '0246 222 33 44', email: 'info@yzm.com', adres: 'Muğla, Türkiye' }
+        ];
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            setupEventListeners();
+            updateTotals();
+        });
+
+        // Formu başlat
+        function initializeForm() {
+            // Bugünün tarihini Türkçe formatında ayarla
+            const today = new Date();
+            const gun = today.getDate().toString().padStart(2, '0');
+            const ay = (today.getMonth() + 1).toString().padStart(2, '0');
+            const yil = today.getFullYear();
+            const todayFormatted = `${gun}.${ay}.${yil}`;
+            
+            document.getElementById('duzenlemeTarihi').value = todayFormatted;
+            document.getElementById('vadeTarihi').value = todayFormatted;
+            
+            // İlk ürün satırını oluştur
+            createProductRow();
+        }
+
+        // Event listener'ları ayarla
+        function setupEventListeners() {
+            // Vade tarihi butonları
+            document.querySelectorAll('.quick-date-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.quick-date-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const days = parseInt(this.dataset.days);
+                    const duzenlemeTarihiStr = document.getElementById('duzenlemeTarihi').value;
+                    
+                    // Türkçe tarih formatını parse et (dd.mm.yyyy)
+                    const tarihParcalari = duzenlemeTarihiStr.split('.');
+                    if (tarihParcalari.length === 3) {
+                        const gun = parseInt(tarihParcalari[0]);
+                        const ay = parseInt(tarihParcalari[1]) - 1; // Ay 0'dan başlar
+                        const yil = parseInt(tarihParcalari[2]);
+                        
+                        const duzenlemeTarihi = new Date(yil, ay, gun);
+                        const vadeTarihi = new Date(duzenlemeTarihi);
+                        vadeTarihi.setDate(vadeTarihi.getDate() + days);
+                        
+                        // Türkçe formatında tarihi ayarla
+                        const vadeGun = vadeTarihi.getDate().toString().padStart(2, '0');
+                        const vadeAy = (vadeTarihi.getMonth() + 1).toString().padStart(2, '0');
+                        const vadeYil = vadeTarihi.getFullYear();
+                        
+                        document.getElementById('vadeTarihi').value = `${vadeGun}.${vadeAy}.${vadeYil}`;
+                    }
+                });
+            });
+
+            // Yeni satır ekleme butonu
+            document.getElementById('addRowBtn').addEventListener('click', createProductRow);
+
+            // Form değişikliklerini dinle
+            document.getElementById('teklifIsmi').addEventListener('input', updateTeklifData);
+            document.getElementById('musteri').addEventListener('input', updateTeklifData);
+            document.getElementById('duzenlemeTarihi').addEventListener('input', updateTeklifData);
+            document.getElementById('vadeTarihi').addEventListener('input', updateTeklifData);
+            document.getElementById('teklifKosullari').addEventListener('input', updateTeklifData);
+        }
+
+        // Ürün satırı oluştur
+        function createProductRow() {
+            const tbody = document.getElementById('productsTableBody');
+            const row = document.createElement('tr');
+            row.className = 'product-row';
+            
+            row.innerHTML = `
+                <td>
+                    <div class="input-with-icon">
+                        <input type="text" class="form-control product-name" placeholder="Ürün/Hizmet adı" oninput="searchProducts(this)" onfocus="showProductDropdown(this)">
+                        <i class="fas fa-search"></i>
+                        <div class="product-dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; max-height: 200px; overflow-y: auto; z-index: 1000;"></div>
+                    </div>
+                </td>
+                <td>
+                    <input type="number" class="quantity-input" value="1.00" step="0.01" min="0" oninput="updateProductData(this)">
+                </td>
+                <td>
+                    <select class="unit-select" onchange="updateProductData(this)">
+                        <option>Adet</option>
+                        <option>Kg</option>
+                        <option>Metre</option>
+                        <option>Saat</option>
+                        <option>Gün</option>
+                        <option>Proje</option>
+                        <option>Aylık</option>
+                        <option>Paket</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" class="price-input" value="0.00" step="0.01" min="0" oninput="updateProductData(this)">
+                    <span style="margin-left: 5px;">₺</span>
+                </td>
+                <td>
+                    <select class="tax-select" onchange="updateProductData(this)">
+                        <option value="20">KDV %20</option>
+                        <option value="10">KDV %10</option>
+                        <option value="8">KDV %8</option>
+                        <option value="1">KDV %1</option>
+                        <option value="0">KDV %0</option>
+                    </select>
+                </td>
+                <td class="total-cell">
+                    0,00 ₺
+                </td>
+                <td class="action-buttons-cell">
+                    <button type="button" class="btn-icon" onclick="addProductRow(this)">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button type="button" class="btn-icon" onclick="removeProductRow(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+            updateTotals();
+        }
+
+        // Ürün arama fonksiyonu
+        function searchProducts(input) {
+            const searchTerm = input.value.toLowerCase();
+            const dropdown = input.parentNode.querySelector('.product-dropdown');
+            
+            if (searchTerm.length < 2) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            
+            const filteredProducts = varsayilanUrunler.filter(urun => 
+                urun.isim.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredProducts.length > 0) {
+                dropdown.innerHTML = filteredProducts.map(urun => 
+                    `<div class="product-option" onclick="selectProduct(this, '${urun.isim}', ${urun.fiyat}, '${urun.birim}', ${urun.kdv})" style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee;">
+                        <strong>${urun.isim}</strong><br>
+                        <small>${urun.birim} - ₺${urun.fiyat.toLocaleString('tr-TR')}</small>
+                    </div>`
+                ).join('');
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        // Ürün seçme fonksiyonu
+        function selectProduct(element, isim, fiyat, birim, kdv) {
+            const row = element.closest('tr');
+            const nameInput = row.querySelector('.product-name');
+            const priceInput = row.querySelector('.price-input');
+            const unitSelect = row.querySelector('.unit-select');
+            const taxSelect = row.querySelector('.tax-select');
+            
+            nameInput.value = isim;
+            priceInput.value = fiyat.toFixed(2);
+            
+            // Birim seç
+            const unitOptions = unitSelect.options;
+            for (let i = 0; i < unitOptions.length; i++) {
+                if (unitOptions[i].text === birim) {
+                    unitSelect.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            // KDV seç
+            const taxOptions = taxSelect.options;
+            for (let i = 0; i < taxOptions.length; i++) {
+                if (taxOptions[i].value == kdv) {
+                    taxSelect.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            // Dropdown'ı gizle
+            element.closest('.product-dropdown').style.display = 'none';
+            
+            // Toplamı güncelle
+            updateProductData(priceInput);
+        }
+
+        // Ürün dropdown'ını göster
+        function showProductDropdown(input) {
+            const dropdown = input.parentNode.querySelector('.product-dropdown');
+            if (input.value.length >= 2) {
+                dropdown.style.display = 'block';
+            }
+        }
+
+        // Dropdown dışına tıklandığında gizle
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.input-with-icon')) {
+                document.querySelectorAll('.product-dropdown').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        });
+
+        // Ürün satırı ekle
+        function addProductRow(button) {
+            const row = button.closest('tr');
+            const newRow = row.cloneNode(true);
+            
+            // Yeni satırın değerlerini temizle
+            newRow.querySelector('.product-name').value = '';
+            newRow.querySelector('.quantity-input').value = '1.00';
+            newRow.querySelector('.unit-select').selectedIndex = 0;
+            newRow.querySelector('.price-input').value = '0.00';
+            newRow.querySelector('.tax-select').selectedIndex = 0;
+            newRow.querySelector('.total-cell').textContent = '0,00 ₺';
+            
+            // Event listener'ları yeniden ekle
+            newRow.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('input', function() { updateProductData(this); });
+                input.addEventListener('change', function() { updateProductData(this); });
+            });
+            
+            row.parentNode.insertBefore(newRow, row.nextSibling);
+            updateTotals();
+        }
+
+        // Ürün satırı sil
+        function removeProductRow(button) {
+            const tbody = document.getElementById('productsTableBody');
+            if (tbody.children.length > 1) {
+                button.closest('tr').remove();
+                updateTotals();
+            }
+        }
+
+        // Ürün verilerini güncelle
+        function updateProductData(element) {
+            const row = element.closest('tr');
+            const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+            const price = parseFloat(row.querySelector('.price-input').value) || 0;
+            const taxRate = parseFloat(row.querySelector('.tax-select').value) || 0;
+            
+            const subtotal = quantity * price;
+            const taxAmount = subtotal * (taxRate / 100);
+            const total = subtotal + taxAmount;
+            
+            row.querySelector('.total-cell').textContent = total.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + ' ₺';
+            
+            updateTotals();
+        }
+
+        // Toplamları güncelle
+        function updateTotals() {
+            let araToplam = 0;
+            let toplamKdv = 0;
+            
+            document.querySelectorAll('.product-row').forEach(row => {
+                const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+                const price = parseFloat(row.querySelector('.price-input').value) || 0;
+                const taxRate = parseFloat(row.querySelector('.tax-select').value) || 0;
+                
+                const subtotal = quantity * price;
+                const taxAmount = subtotal * (taxRate / 100);
+                
+                araToplam += subtotal;
+                toplamKdv += taxAmount;
+            });
+            
+            const genelToplam = araToplam + toplamKdv;
+            
+            document.getElementById('araToplam').textContent = araToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + '₺';
+            document.getElementById('toplamKdv').textContent = toplamKdv.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + '₺';
+            document.getElementById('genelToplam').textContent = genelToplam.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + '₺';
+        }
+
+        // Teklif verilerini güncelle
+        function updateTeklifData() {
+            teklifData.isim = document.getElementById('teklifIsmi').value;
+            teklifData.musteri = document.getElementById('musteri').value;
+            teklifData.duzenlemeTarihi = document.getElementById('duzenlemeTarihi').value;
+            teklifData.vadeTarihi = document.getElementById('vadeTarihi').value;
+            teklifData.kosullar = document.getElementById('teklifKosullari').value;
+        }
+
+        // Ürün verilerini topla
+        function collectProductData() {
+            teklifData.urunler = [];
+            
+            document.querySelectorAll('.product-row').forEach(row => {
+                const urun = {
+                    isim: row.querySelector('.product-name').value,
+                    miktar: parseFloat(row.querySelector('.quantity-input').value) || 0,
+                    birim: row.querySelector('.unit-select').value,
+                    birimFiyat: parseFloat(row.querySelector('.price-input').value) || 0,
+                    vergi: parseFloat(row.querySelector('.tax-select').value) || 0,
+                    toplam: parseFloat(row.querySelector('.total-cell').textContent.replace(/[^\d,]/g, '').replace(',', '.')) || 0
+                };
+                
+                if (urun.isim && urun.miktar > 0) {
+                    teklifData.urunler.push(urun);
+                }
+            });
+        }
+
+        // Teklif oluştur
+        function createTeklif() {
+            updateTeklifData();
+            collectProductData();
+            
+            // Validasyon
+            if (!teklifData.isim.trim()) {
+                alert('Lütfen teklif ismini giriniz.');
+                return;
+            }
+            
+            if (!teklifData.musteri.trim()) {
+                alert('Lütfen müşteri adını giriniz.');
+                return;
+            }
+            
+            if (teklifData.urunler.length === 0) {
+                alert('Lütfen en az bir ürün/hizmet ekleyiniz.');
+                return;
+            }
+            
+            // Teklif verilerini localStorage'a kaydet (gerçek uygulamada veritabanına kaydedilir)
+            const teklifler = JSON.parse(localStorage.getItem('teklifler') || '[]');
+            const yeniTeklif = {
+                id: Date.now(),
+                ...teklifData,
+                durum: 'awaiting',
+                olusturmaTarihi: new Date().toISOString(),
+                faturaNo: 'FAT-' + Date.now()
+            };
+            
+            teklifler.push(yeniTeklif);
+            localStorage.setItem('teklifler', JSON.stringify(teklifler));
+            
+            alert('Teklif başarıyla oluşturuldu!');
+            window.location.href = 'teklifler.php';
+        }
+
+        // Müşteri arama (simülasyon)
+        document.getElementById('musteri').addEventListener('input', function() {
+            const musteriAdi = this.value.toLowerCase();
+            const customerInfo = document.querySelector('.customer-info-content');
+            
+            const bulunanMusteri = varsayilanMusteriler.find(m => m.ad.toLowerCase().includes(musteriAdi));
+            
+            if (bulunanMusteri && musteriAdi.length > 2) {
+                customerInfo.innerHTML = `
+                    <strong>${bulunanMusteri.ad}</strong><br>
+                    Tel: ${bulunanMusteri.telefon}<br>
+                    Email: ${bulunanMusteri.email}<br>
+                    Adres: ${bulunanMusteri.adres}
+                `;
+            } else {
+                customerInfo.innerHTML = '-';
+            }
+        });
+    </script>
 </body>
 </html> 

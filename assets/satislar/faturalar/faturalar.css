@@ -186,6 +186,55 @@
             cursor: pointer;
         }
 
+        .export-dropdown {
+            position: relative;
+        }
+
+        .export-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .export-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1000;
+            padding: 8px 0;
+        }
+
+        .export-menu button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-primary);
+            transition: background-color 0.2s;
+        }
+
+        .export-menu button:hover {
+            background-color: #f8f9fa;
+        }
+
+        .export-menu button i {
+            width: 16px;
+            color: var(--text-secondary);
+        }
+
         .summary-stats {
             display: flex;
             gap: 20px;
@@ -218,6 +267,199 @@
             color: var(--primary-color);
         }
 
+        /* Filter Modal */
+        .filter-container {
+            position: relative;
+        }
+
+        .filter-modal {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            min-width: 300px;
+            z-index: 1000;
+            display: none;
+            padding: 20px;
+        }
+
+        .filter-modal.active {
+            display: block;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .filter-option input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .filter-option label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .filter-date-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-date-range input {
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-group {
+            flex: 1;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .filter-group input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .filter-row label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filter-row input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-secondary {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Table Rows */
+        .fatura-row {
+            transition: background-color 0.2s;
+        }
+
+        .fatura-row:hover {
+            background-color: #f8f9fa;
+        }
+
+        .fatura-info {
+            min-width: 200px;
+        }
+
+        .fatura-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .fatura-number {
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
+        }
+
+        .fatura-customer {
+            color: var(--text-primary);
+        }
+
+        .fatura-date, .fatura-due {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .fatura-amount, .fatura-remaining {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .fatura-status {
+            text-align: center;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-odendi {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-odenmedi {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-kısmi-ödendi {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -232,6 +474,14 @@
             }
             .search-box {
                 max-width: none;
+            }
+            .filter-modal {
+                min-width: 300px;
+                left: -100px;
+            }
+            .filter-row {
+                flex-direction: column;
+                gap: 10px;
             }
         }
 

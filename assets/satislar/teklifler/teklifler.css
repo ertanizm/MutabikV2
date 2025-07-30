@@ -83,6 +83,10 @@
             gap: 15px;
         }
 
+        .filter-container {
+            position: relative;
+        }
+
         .filter-btn {
             background-color: white;
             border: 1px solid var(--border-color);
@@ -93,6 +97,11 @@
             align-items: center;
             gap: 5px;
             font-size: 14px;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
         }
 
         .search-box {
@@ -136,6 +145,93 @@
             text-decoration: none;
         }
 
+        /* Filtreleme Modal */
+        .filter-modal {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            min-width: 300px;
+            z-index: 1000;
+            display: none;
+            padding: 20px;
+        }
+
+        .filter-modal.active {
+            display: block;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .filter-option input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .filter-option label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .filter-date-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-date-range input {
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .filter-btn-secondary {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .filter-btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
         /* Table */
         .table-container {
             background-color: white;
@@ -161,6 +257,59 @@
             border: none;
             padding: 15px;
             vertical-align: middle;
+        }
+
+        /* Teklif satırları için stiller */
+        .teklif-row {
+            transition: background-color 0.2s ease;
+        }
+
+        .teklif-row:hover {
+            background-color: #f8f9fa;
+        }
+
+        .teklif-row.clickable {
+            cursor: pointer;
+        }
+
+        .teklif-row.clickable:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .teklif-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .teklif-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .teklif-customer {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .fatura-no {
+            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+
+        .tarih {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .tutar {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
         }
 
         /* Empty State */
@@ -275,6 +424,14 @@
             }
             .search-box {
                 max-width: none;
+            }
+            .filter-modal {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 400px;
             }
         }
         /* Profil Dropdown ve Widget */
