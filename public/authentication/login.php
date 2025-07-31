@@ -4,7 +4,11 @@ session_start();
 // Veritabanı bilgilerin
 $servername = "localhost";
 $username = "root";
+<<<<<<< Updated upstream:public/authentication/login.php
 $password = "1234";
+=======
+$password = "akdere";
+>>>>>>> Stashed changes:authentication/login.php
 $dbname = "master_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

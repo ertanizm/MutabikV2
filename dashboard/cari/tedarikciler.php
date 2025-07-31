@@ -1,3 +1,107 @@
+<<<<<<< Updated upstream
+=======
+<?php
+// 1. Veritabanı bağlantısı
+$host = 'localhost';
+$dbname = 'deneme_db'; // Veritabanı adını kendi projenle aynı yap
+$user = 'root';
+$pass = 'akdere'; // XAMPP kullanıyorsan genellikle boş olur
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+    // Sayfalama ayarları
+    $limit = 2; // Her sayfada gösterilecek kayıt sayısı
+    $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    $start = ($page - 1) * $limit;
+
+    // Toplam kayıt sayısı
+    $totalStmt = $pdo->query("SELECT COUNT(*) FROM cariler WHERE tip = 'tedarikci'");
+    $total = $totalStmt->fetchColumn();
+    $pages = ceil($total / $limit);
+
+    // Sayfaya göre tedarikçileri getir
+    $stmt = $pdo->prepare("SELECT * FROM cariler WHERE tip = 'tedarikci' ORDER BY id ASC LIMIT :start, :limit");
+    $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (isset($_GET['export']) && $_GET['export'] == 'csv') {
+        $stmt = $pdo->prepare("SELECT isim, vergi_no, email, telefon, adres, il, ilce, aciklama FROM cariler WHERE tip = 'tedarikci'");
+        $stmt->execute();
+        $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=tedarikciler.csv');
+
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Adı', 'Vergi No', 'E-posta', 'Telefon', 'Adres', 'İl', 'İlçe', 'Açıklama']);
+
+        foreach ($suppliers as $supplier) {
+            fputcsv($output, $supplier);
+        }
+
+        fclose($output);
+        exit;
+    }
+
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
+// Tedarikçi silme
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_supplier'])) {
+    $id = $_POST['supplier_id'];
+    $stmt = $pdo->prepare("DELETE FROM cariler WHERE id = ?");
+    $stmt->execute([$id]);
+
+    echo "<script>alert('Tedarikçi başarıyla silindi!'); window.location.href='tedarikciler.php';</script>";
+    exit;
+}
+
+// Tedarikçi ekleme
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_supplier'])) {
+    $name = $_POST['customerName'] ?? '';
+    $tax_id = $_POST['customerTaxId'] ?? '';
+    $email = $_POST['customerEmail'] ?? '';
+    $phone = $_POST['customerPhone'] ?? '';
+    $address = $_POST['customerAddress'] ?? '';
+    $city = $_POST['customerCity'] ?? '';
+    $district = $_POST['customerDistrict'] ?? '';
+    $note = $_POST['customerNote'] ?? '';
+
+    $stmt = $pdo->prepare("INSERT INTO cariler (isim, vergi_no, email, telefon, adres, il, ilce,aciklama,tip) 
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?,'tedarikci')");
+    $stmt->execute([$name, $tax_id, $email, $phone, $address, $city, $district, $note]);
+
+    echo "<script>alert('Tedarikçi başarıyla eklendi!'); window.location.href='tedarikciler.php';</script>";
+    exit;
+}
+
+// Tedarikçi güncelleme
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_supplier'])) {
+    $id = $_POST['supplier_id'];
+    $name = $_POST['customerName'] ?? '';
+    $tax_id = $_POST['customerTaxId'] ?? '';
+    $email = $_POST['customerEmail'] ?? '';
+    $phone = $_POST['customerPhone'] ?? '';
+    $address = $_POST['customerAddress'] ?? '';
+    $city = $_POST['customerCity'] ?? '';
+    $district = $_POST['customerDistrict'] ?? '';
+    $note = $_POST['customerNote'] ?? '';
+
+    $stmt = $pdo->prepare("UPDATE cariler 
+                           SET isim = ?, vergi_no = ?, email = ?, telefon = ?, adres = ?, il = ?, ilce = ?, aciklama = ? 
+                           WHERE id = ?");
+    $stmt->execute([$name, $tax_id, $email, $phone, $address, $city, $district, $note, $id]);
+
+    echo "<script>alert('Tedarikçi başarıyla güncellendi!'); window.location.href='tedarikciler.php';</script>";
+    exit;
+}
+
+?>
+
+>>>>>>> Stashed changes
 <!DOCTYPE html>
 <html lang="tr">
 <head>

@@ -3,7 +3,11 @@ date_default_timezone_set('Europe/Istanbul');
 // Veritabanı bağlantısı
 $servername = "localhost";
 $username = "root";
+<<<<<<< Updated upstream:public/authentication/reset_password.php
 $password = "1234";
+=======
+$password = "akdere";
+>>>>>>> Stashed changes:authentication/reset_password.php
 $dbname = "master_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

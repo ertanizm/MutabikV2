@@ -1,3 +1,88 @@
+<<<<<<< Updated upstream
+=======
+<?php
+// 1. Veritabanı bağlantısı
+$host = 'localhost';
+$dbname = 'deneme_db'; // Veritabanı adını kendi projenle aynı yap
+$user = 'root';
+$pass = 'akdere'; // XAMPP kullanıyorsan genellikle boş olur
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
+
+// Yeni Depo ekleme (NOT TOUCHED as per request)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_supplier'])) {
+    $depo_adi = $_POST['depo_adi'] ?? '';
+    $depo_adresi = $_POST['depo_adresi'] ?? '';
+    $telefon = $_POST['telefon'] ?? '';
+    $yetkili = $_POST['yetkili'] ?? '';
+    // Durum alanı eklenmemiş, önceki kodda vardı, ancak kullanıcı "dokunma" dediği için burada eklemiyorum.
+    // Eğer ekleme formunda durum alanı varsa ve kaydedilmesini istiyorsanız bu satırı eklemelisiniz:
+    // $durum = $_POST['durum'] ?? 'aktif'; 
+
+    $stmt = $pdo->prepare("INSERT INTO depolar (depo_adi, depo_adresi, telefon, yetkili) 
+                            VALUES (?, ?, ?, ?)");
+    $stmt->execute([$depo_adi, $depo_adresi, $telefon, $yetkili]);
+
+    echo "<script>alert('Yeni Depo başarıyla eklendi!'); window.location.href='depolar.php';</script>";
+    exit;
+}
+
+// Depolar güncelleme (ONLY THIS SECTION HAS BEEN MODIFIED)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_supplier'])) {
+    $id = $_POST['id'] ?? null; // Use null coalescing for safety
+    $depo_adi = $_POST['depo_adi'] ?? '';
+    $depo_adresi = $_POST['depo_adresi'] ?? '';
+    $telefon = $_POST['telefon'] ?? '';
+    $yetkili = $_POST['yetkili'] ?? '';
+    $durum = $_POST['durum'] ?? 'aktif'; // IMPORTANT: Get the 'durum' value from the form
+
+    // Basic validation for ID
+    if (!$id || !is_numeric($id)) {
+        echo "<script>alert('Geçersiz Depo ID\'si.'); window.location.href='depolar.php?_t=" . time() . "';</script>";
+        exit;
+    }
+
+    try {
+        $stmt = $pdo->prepare("UPDATE depolar 
+                                SET depo_adi = ?, depo_adresi = ?, telefon = ?, yetkili = ?, durum = ? 
+                                WHERE id = ?"); // IMPORTANT: 'durum' added to the UPDATE query
+        $stmt->execute([$depo_adi, $depo_adresi, $telefon, $yetkili, $durum, $id]);
+
+        // Check if any rows were affected by the update
+        if ($stmt->rowCount() > 0) {
+            echo "<script>alert('Depo bilgileri başarıyla güncellendi!'); window.location.href='depolar.php?_t=" . time() . "';</script>";
+        } else {
+            // This means the query ran, but no rows were updated (e.g., ID not found, or no changes made)
+            echo "<script>alert('Depo bilgileri güncellenemedi veya herhangi bir değişiklik yapılmadı.'); window.location.href='depolar.php?_t=" . time() . "';</script>";
+        }
+    } catch (PDOException $e) {
+        // Log the actual database error for debugging (check your server's PHP error log)
+        error_log("Depo güncelleme hatası: " . $e->getMessage() . " - ID: " . $id . " - Data: " . json_encode($_POST));
+        echo "<script>alert('Depo güncelleme hatası: " . htmlspecialchars($e->getMessage()) . "'); window.location.href='depolar.php?_t=" . time() . "';</script>";
+    }
+    exit;
+}
+
+// Depo Silme (NOT TOUCHED as per request)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_supplier'])) {
+    $id = $_POST['supplier_id'];
+    $stmt = $pdo->prepare("DELETE FROM depolar WHERE id = ?");
+    $stmt->execute([$id]);
+    echo "<script>alert('Depo başarıyla silindi!'); window.location.href='depolar.php';</script>";
+    exit;
+}
+
+// Verileri çekme
+$stmt = $pdo->query("SELECT * FROM depolar ORDER BY id ASC");
+$suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+>>>>>>> Stashed changes
 <!DOCTYPE html>
 <html lang="tr">
 <head>

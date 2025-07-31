@@ -12,7 +12,11 @@ use PHPMailer\PHPMailer\Exception;
 $host = 'localhost';
 $db   = 'master_db';
 $user = 'root';
+<<<<<<< Updated upstream:public/authentication/sign_up.php
 $pass = '1234';
+=======
+$pass = 'akdere'; // Veritabanı şifreni buraya gir
+>>>>>>> Stashed changes:authentication/sign_up.php
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

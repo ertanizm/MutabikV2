@@ -10,7 +10,11 @@ require '../../lib/phpmailer/SMTP.php';
 // Veritabanı bağlantısı
 $servername = "localhost";
 $username = "root";
+<<<<<<< Updated upstream:public/authentication/forgot_password.php
 $password = "1234";
+=======
+$password = "akdere";
+>>>>>>> Stashed changes:authentication/forgot_password.php
 $dbname = "master_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
