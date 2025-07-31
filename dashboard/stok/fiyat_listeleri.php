@@ -1,6 +1,5 @@
 <?php
-$userName = 'Miraç Deprem';
-$companyName = 'Atia Yazılım';
+require_once __DIR__ . '/../../config/db_connect.php';
 ?>
 <!DOCTYPE html>
 <html lang="tr">

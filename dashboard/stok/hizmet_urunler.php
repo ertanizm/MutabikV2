@@ -1,207 +1,95 @@
 <?php
-// Veritabanı bağlantı bilgileri
-$host = 'localhost';
-$dbname = 'deneme_db';
-$user = 'root';
-$pass = 'akdere';
-
-// Veritabanı bağlantısını oluştur
-$conn = new mysqli($host, $user, $pass, $dbname);
-
-// Bağlantıyı kontrol et
-if ($conn->connect_error) {
-    die("Veritabanı bağlantısı başarısız: " . $conn->connect_error);
-}
+require_once __DIR__ . '/../../config/db_connect.php';
 
 // ===============================================
 // ÜRÜN EKLEME VEYA GÜNCELLEME İŞLEMİ (POST isteği ile)
 // ===============================================
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'add_or_update_product') {
     $product_id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-    $stok_adi = $conn->real_escape_string($_POST['productName']);
-    $stok_kodu = isset($_POST['stockCode']) ? $conn->real_escape_string($_POST['stockCode']) : null;
-    $barkod_no = isset($_POST['barcodeNumber']) ? $conn->real_escape_string($_POST['barcodeNumber']) : null;
-    $kategori = isset($_POST['category']) ? $conn->real_escape_string($_POST['category']) : null;
-    $birim = isset($_POST['purchaseSaleUnit']) ? $conn->real_escape_string($_POST['purchaseSaleUnit']) : null;
+    $stok_adi = $_POST['productName'];
+    $stok_kodu = $_POST['stockCode'] ?? null;
+    $barkod_no = $_POST['barcodeNumber'] ?? null;
+    $kategori = $_POST['category'] ?? null;
+    $birim = $_POST['purchaseSaleUnit'] ?? null;
 
-    // Fiyat bilgileri ve KDV oranları
-    $alis_fiyat = isset($_POST['purchasePriceExclTax']) && $_POST['purchasePriceExclTax'] !== '' ? floatval($_POST['purchasePriceExclTax']) : null;
-    $alis_fiyat_kdvli = isset($_POST['purchasePriceInclTax']) && $_POST['purchasePriceInclTax'] !== '' ? floatval($_POST['purchasePriceInclTax']) : null;
-    $satis_fiyat = isset($_POST['salePriceExclTax']) && $_POST['salePriceExclTax'] !== '' ? floatval($_POST['salePriceExclTax']) : null;
-    $satis_fiyat_kdvli = isset($_POST['salePriceInclTax']) && $_POST['salePriceInclTax'] !== '' ? floatval($_POST['salePriceInclTax']) : null;
-    $kdv_orani = isset($_POST['kdvRate']) && $_POST['kdvRate'] !== '' ? floatval($_POST['kdvRate']) : null;
+    $alis_fiyat = $_POST['purchasePriceExclTax'] !== '' ? floatval($_POST['purchasePriceExclTax']) : null;
+    $alis_fiyat_kdvli = $_POST['purchasePriceInclTax'] !== '' ? floatval($_POST['purchasePriceInclTax']) : null;
+    $satis_fiyat = $_POST['salePriceExclTax'] !== '' ? floatval($_POST['salePriceExclTax']) : null;
+    $satis_fiyat_kdvli = $_POST['salePriceInclTax'] !== '' ? floatval($_POST['salePriceInclTax']) : null;
+    $kdv_orani = $_POST['kdvRate'] !== '' ? floatval($_POST['kdvRate']) : null;
 
-    $kritik_stok = isset($_POST['criticalStock']) && $_POST['criticalStock'] !== '' ? intval($_POST['criticalStock']) : null;
+    $kritik_stok = $_POST['criticalStock'] !== '' ? intval($_POST['criticalStock']) : null;
     $stok_takip = isset($_POST['stockTracking']) ? 1 : 0;
-    $aciklama = isset($_POST['productDescription']) ? $conn->real_escape_string($_POST['productDescription']) : null;
-    $miktar = isset($_POST['miktar']) && $_POST['miktar'] !== '' ? intval($_POST['miktar']) : null;
+    $aciklama = $_POST['productDescription'] ?? null;
+    $miktar = $_POST['miktar'] !== '' ? intval($_POST['miktar']) : null;
 
     $urun_fotografi_yolu = null;
-    // Fotoğraf yükleme işlemi
     if (isset($_FILES['productPhoto']) && $_FILES['productPhoto']['error'] == UPLOAD_ERR_OK) {
         $target_dir = "../../uploads/";
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true);
-        }
+        if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
         $file_name = uniqid() . "_" . basename($_FILES["productPhoto"]["name"]);
         $target_file = $target_dir . $file_name;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Dosya türünü kontrol et
         $check = getimagesize($_FILES["productPhoto"]["tmp_name"]);
-        if ($check !== false) {
-            // Belirli dosya formatlarına izin ver
-            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-                echo "<script>alert('Sadece JPG, JPEG, PNG & GIF dosyalarına izin verilir.');</script>";
-            } else {
-                if (move_uploaded_file($_FILES["productPhoto"]["tmp_name"], $target_file)) {
-                    $urun_fotografi_yolu = $file_name;
-                } else {
-                    echo "<script>alert('Üzgünüz, dosyanız yüklenirken bir hata oluştu.');</script>";
-                }
+        if ($check !== false && in_array($imageFileType, ['jpg', 'jpeg', 'png', 'gif'])) {
+            if (move_uploaded_file($_FILES["productPhoto"]["tmp_name"], $target_file)) {
+                $urun_fotografi_yolu = $file_name;
             }
-        } else {
-            echo "<script>alert('Yüklenen dosya bir resim değil.');</script>";
         }
     }
 
     if ($product_id == 0) {
-        // YENİ ÜRÜN EKLEME
-        $stmt = $conn->prepare("INSERT INTO stoklar (stok_adi, stok_kodu, barkod_no, kategori, birim, foto, alis_fiyat, alis_fiyat_kdvli, satis_fiyat, satis_fiyat_kdvli, kdv_orani, kritik_stok, stok_takip, aciklama, miktar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        if ($stmt === false) {
-            die('Prepare failed: ' . htmlspecialchars($conn->error));
-        }
-        $stmt->bind_param("ssssssddddiiisi", $stok_adi, $stok_kodu, $barkod_no, $kategori, $birim, $urun_fotografi_yolu, $alis_fiyat, $alis_fiyat_kdvli, $satis_fiyat, $satis_fiyat_kdvli, $kdv_orani, $kritik_stok, $stok_takip, $aciklama, $miktar);
-
-        if ($stmt->execute()) {
-            echo "<script>alert('Ürün/Hizmet başarıyla eklendi!'); window.location.href = 'hizmet_urunler.php';</script>";
-        } else {
-            echo "<script>alert('Hata: " . htmlspecialchars($stmt->error) . "');</script>";
-        }
-        $stmt->close();
+        $stmt = $pdo->prepare("INSERT INTO stoklar (stok_adi, stok_kodu, barkod_no, kategori, birim, foto, alis_fiyat, alis_fiyat_kdvli, satis_fiyat, satis_fiyat_kdvli, kdv_orani, kritik_stok, stok_takip, aciklama, miktar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$stok_adi, $stok_kodu, $barkod_no, $kategori, $birim, $urun_fotografi_yolu, $alis_fiyat, $alis_fiyat_kdvli, $satis_fiyat, $satis_fiyat_kdvli, $kdv_orani, $kritik_stok, $stok_takip, $aciklama, $miktar]);
+        echo "<script>alert('Ekleme başarılı'); window.location.href = 'hizmet_urunler.php';</script>";
     } else {
-        // MEVCUT ÜRÜN GÜNCELLEME
-        $sql = "UPDATE stoklar SET stok_adi=?";
-        //        -- stok_kodu=?, barkod_no=?, kategori=?, birim=?, alis_fiyat=?, alis_fiyat_kdvli=?, satis_fiyat=?, satis_fiyat_kdvli=?, kdv_orani=?, kritik_stok=?, stok_takip=?, aciklama=?, miktar=?";
+        $sql = "UPDATE stoklar SET stok_adi=?, stok_kodu=?, barkod_no=?, kategori=?, birim=?, alis_fiyat=?, alis_fiyat_kdvli=?, satis_fiyat=?, satis_fiyat_kdvli=?, kdv_orani=?, kritik_stok=?, stok_takip=?, aciklama=?, miktar=?";
+        $params = [$stok_adi, $stok_kodu, $barkod_no, $kategori, $birim, $alis_fiyat, $alis_fiyat_kdvli, $satis_fiyat, $satis_fiyat_kdvli, $kdv_orani, $kritik_stok, $stok_takip, $aciklama, $miktar];
 
         if ($urun_fotografi_yolu) {
             $sql .= ", foto=?";
+            $params[] = $urun_fotografi_yolu;
         }
         $sql .= " WHERE id=?";
-        //
-        $stmt = $conn->prepare($sql);
-        if ($stmt === false) {
-            die('Prepare failed: ' . htmlspecialchars($conn->error));
-        }
+        $params[] = $product_id;
 
-        if ($urun_fotografi_yolu) {
-            // 103. SATIR: Fotoğraf yolu varken (16 değişken, 16 tip karakteri)
-            // tipler: stok_adi(s), stok_kodu(s), barkod_no(s), kategori(s), birim(s), 
-            // alis_fiyat(d), alis_fiyat_kdvli(d), satis_fiyat(d), satis_fiyat_kdvli(d), kdv_orani(d), 
-            // kritik_stok(i), stok_takip(i), aciklama(s), miktar(i), urun_fotografi_yolu(s), product_id(i)
-            $stmt->bind_param($stok_adi, $stok_kodu, $barkod_no, $kategori, $birim, $alis_fiyat, $alis_fiyat_kdvli, $satis_fiyat, $satis_fiyat_kdvli, $kdv_orani, $kritik_stok, $stok_takip, $aciklama, $miktar, $urun_fotografi_yolu, $product_id);
-        } else {
-            // 109. SATIR: Fotoğraf yolu yokken (15 değişken, 15 tip karakteri)
-            // tipler: stok_adi(s), stok_kodu(s), barkod_no(s), kategori(s), birim(s), 
-            // alis_fiyat(d), alis_fiyat_kdvli(d), satis_fiyat(d), satis_fiyat_kdvli(d), kdv_orani(d), 
-            // kritik_stok(i), stok_takip(i), aciklama(s), miktar(i), product_id(i)
-
-            $sql = "UPDATE stoklar SET 
-                    stok_adi='$stok_adi', 
-                    stok_kodu='$stok_kodu', 
-                    barkod_no='$barkod_no', 
-                    kategori='$kategori', 
-                    birim='$birim', 
-                    alis_fiyat=$alis_fiyat, 
-                    alis_fiyat_kdvli=$alis_fiyat_kdvli, 
-                    satis_fiyat=$satis_fiyat, 
-                    satis_fiyat_kdvli=$satis_fiyat_kdvli, 
-                    kdv_orani=$kdv_orani, 
-                    kritik_stok=$kritik_stok, 
-                    stok_takip=$stok_takip, 
-                    aciklama='$aciklama', 
-                    miktar=$miktar";
-
-            if ($urun_fotografi_yolu != null) { // Sadece yeni fotoğraf yüklendiyse foto sütununu güncelle
-                $sql .= ", foto=$urun_fotografi_yolu";
-            }
-
-            $sql .= " WHERE id=$product_id"; // product_id zaten intval ile temizlendi
-
-            if ($conn->query($sql) === TRUE) {
-                echo "<script>alert('Ürün/Hizmet başarıyla güncellendi!'); window.location.href = 'hizmet_urunler.php';</script>";
-            } else {
-                echo "<script>alert('Hata: " . htmlspecialchars($conn->error) . "');</script>";
-            }
-            //$stmt->bind_param("sssssddddiiisiii", $stok_adi, $product_id);
-            //  $stok_kodu, $barkod_no, $kategori, $birim, $alis_fiyat, $alis_fiyat_kdvli, $satis_fiyat, $satis_fiyat_kdvli, $kdv_orani, $kritik_stok, $stok_takip, $aciklama, $miktar, "foto", $product_id);
-        }
-
-        if ($stmt->execute()) {
-            echo "<script>alert('Ürün/Hizmet başarıyla güncellendi!'); window.location.href = 'hizmet_urunler.php';</script>";
-        } else {
-            echo "<script>alert('Hata: " . htmlspecialchars($stmt->error) . "');</script>";
-        }
-        $stmt->close();
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        echo "<script>alert('Güncelleme başarılı'); window.location.href = 'hizmet_urunler.php';</script>";
     }
 }
 
 // ===============================================
-// ÜRÜN SİLME İŞLEMİ (GET isteği ile)
+// ÜRÜN SİLME İŞLEMİ
 // ===============================================
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    $stmt = $conn->prepare("DELETE FROM stoklar WHERE id = ?");
-    if ($stmt === false) {
-        die('Prepare failed: ' . htmlspecialchars($conn->error));
-    }
-    $stmt->bind_param("i", $id);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Ürün/Hizmet başarıyla silindi!'); window.location.href = 'hizmet_urunler.php';</script>";
-    } else {
-        echo "<script>alert('Hata: " . htmlspecialchars($stmt->error) . "');</script>";
-    }
-    $stmt->close();
+    $stmt = $pdo->prepare("DELETE FROM stoklar WHERE id = ?");
+    $stmt->execute([$id]);
+    echo "<script>alert('Silme başarılı'); window.location.href = 'hizmet_urunler.php';</script>";
 }
 
 // ===============================================
-// ÜRÜN VERİLERİNİ ÇEKME (JSON olarak döndürmek için AJAX isteği)
+// ÜRÜN VERİSİ GETİRME
 // ===============================================
 if (isset($_GET['action']) && $_GET['action'] == 'fetch_product' && isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    $stmt = $conn->prepare("SELECT * FROM stoklar WHERE id = ?");
-    if ($stmt === false) {
-        // Hata durumunda boş JSON döndür
-        header('Content-Type: application/json');
-        echo json_encode(['error' => 'Prepare failed: ' . htmlspecialchars($conn->error)]);
-        exit;
-    }
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $product_data = $result->fetch_assoc();
-    $stmt->close();
+    $stmt = $pdo->prepare("SELECT * FROM stoklar WHERE id = ?");
+    $stmt->execute([$id]);
+    $product_data = $stmt->fetch(PDO::FETCH_ASSOC);
     header('Content-Type: application/json');
     echo json_encode($product_data);
-    exit; // Sadece JSON çıktısı ver ve çık
+    exit;
 }
-
 
 // ===============================================
 // ÜRÜNLERİ LİSTELEME
 // ===============================================
 $sql = "SELECT id, stok_adi, miktar FROM stoklar";
-$result = $conn->query($sql);
+$stmt = $pdo->query($sql);
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$products = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $products[] = $row;
-    }
-}
-
-$conn->close(); // Bağlantıyı kapat
 ?>
 
 <!DOCTYPE html>

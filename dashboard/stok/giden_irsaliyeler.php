@@ -1,6 +1,5 @@
 <?php
-// Bu alana PHP backend kodları veya veritabanı bağlantıları gelebilir
-// Örneğin, irsaliye verilerini çekme, filtreleme vb.
+require_once __DIR__ . '/../../config/db_connect.php';
 ?>
 <!DOCTYPE html>
 <html lang="tr">

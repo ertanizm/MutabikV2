@@ -1,45 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . '/../../config/db_connect.php';
 
-// Veritabanı bağlantısı
-$host = 'localhost';
-$dbname = 'deneme_db';
-$user = 'root';
-$pass = 'akdere';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    error_log("Veritabanı bağlantı hatası: " . $e->getMessage());
-    // Burada hata gösterimi yapabilirsin, şimdilik devam edelim
-}
-
-// Kullanıcı bilgileri ve form işlemi (senin kodun aynı kalabilir)
-
-$userEmail = $_SESSION['email'] ?? 'default@email.com';
-$userName = 'Miraç Deprem';
-$companyName = 'Atia Yazılım';
-
-if (isset($pdo)) {
-    try {
-        $stmt = $pdo->prepare("SELECT u.email, u.username, c.name as company_name 
-                               FROM users u 
-                               JOIN companies c ON u.company_id = c.id 
-                               WHERE u.email = ?");
-        $stmt->execute([$userEmail]);
-        $userData = $stmt->fetch();
-
-        if ($userData) {
-            $userEmail = $userData['email'];
-            $userName = $userData['username'] ?? 'Varsayılan Ad';
-            $companyName = $userData['company_name'] ?? 'Varsayılan Şirket';
-        }
-    } catch (PDOException $e) {
-        error_log("Kullanıcı bilgileri alınamadı: " . $e->getMessage());
-    }
-}
 if (isset($_GET['export']) && $_GET['export'] == 1) {
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=musteriler.csv');

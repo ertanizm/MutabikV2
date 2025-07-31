@@ -1,10 +1,5 @@
 <?php
-// Gerekirse session başlat
-// session_start();
-
-// Kullanıcı bilgileri örnek (gerçek uygulamada session veya veritabanından alınır)
-$userName = 'Miraç Deprem';
-$companyName = 'Atia Yazılım';
+require_once __DIR__ . '/../../../config/db_connect.php';
 
 ?>
 <!DOCTYPE html>

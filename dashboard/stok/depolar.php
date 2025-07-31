@@ -1,17 +1,5 @@
 <?php
-// 1. Veritabanı bağlantısı
-$host = 'localhost';
-$dbname = 'abc_db'; // Veritabanı adını kendi projenle aynı yap
-$user = 'root';
-$pass = ''; // XAMPP kullanıyorsan genellikle boş olur
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Veritabanı bağlantı hatası: " . $e->getMessage());
-}
-
+require_once __DIR__ . '/../../config/db_connect.php';
 // Yeni Depo ekleme (NOT TOUCHED as per request)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_supplier'])) {
     $depo_adi = $_POST['depo_adi'] ?? '';

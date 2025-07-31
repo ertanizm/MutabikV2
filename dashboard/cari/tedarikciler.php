@@ -1,9 +1,5 @@
 <?php
-// 1. Veritabanı bağlantısı
-$host = 'localhost';
-$dbname = 'abc_db'; // Veritabanı adını kendi projenle aynı yap
-$user = 'root';
-$pass = ''; // XAMPP kullanıyorsan genellikle boş olur
+require_once __DIR__ . '/../../config/db_connect.php';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
