@@ -1,5 +1,11 @@
 <?php
-require_once __DIR__ . '/../../config/db_connect.php';
+
+require '../../config/config.php';
+try {
+   $pdo = getTenantPDO();
+} catch (Exception $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
 // Yeni Depo ekleme (NOT TOUCHED as per request)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_supplier'])) {
     $depo_adi = $_POST['depo_adi'] ?? '';

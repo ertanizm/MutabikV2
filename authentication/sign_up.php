@@ -1,5 +1,8 @@
 <?php
-session_start();
+
+
+// Config dosyasını dahil et
+require '../config/config.php';  // burada $masterPdo zaten tanımlı ve hazır
 
 require '../lib/phpmailer/Exception.php';
 require '../lib/phpmailer/PHPMailer.php';
@@ -7,25 +10,6 @@ require '../lib/phpmailer/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// Veritabanı bağlantısı
-$host = 'localhost';
-$db   = 'master_db';
-$user = 'root';
-$pass = ''; // Veritabanı şifreni buraya gir
-$charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    die("Veritabanı bağlantı hatası: " . $e->getMessage());
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firma_adi = $_POST['firma_adi'] ?? '';
@@ -47,23 +31,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $verification_code = rand(100000, 999999);
 
     try {
-        // 1. Şirket var mı kontrol et, yoksa ekle
-        $stmt = $pdo->prepare("SELECT id FROM companies WHERE name = ?");
+        // Veritabanı ismini oluştur
+        $db_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $firma_adi)) . '_db';
+
+        // Aynı db_name var mı kontrol et
+        $stmt = $masterPdo->prepare("SELECT id, db_name FROM companies WHERE name = ?");
         $stmt->execute([$firma_adi]);
         $company = $stmt->fetch();
 
         if ($company) {
             $company_id = $company['id'];
+            $db_name = $company['db_name']; // varsa varolan db_name'i al
         } else {
-            $db_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $firma_adi)) . '_db';
-            $stmt = $pdo->prepare("INSERT INTO companies (name, db_name, start_date, status) VALUES (?, ?, CURDATE(), 'Aktif')");
+            // Veritabanını oluştur (config.php içinde yoksa eklemelisin)
+            $masterPdo->exec("CREATE DATABASE IF NOT EXISTS `$db_name` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+
+            // companies tablosuna kayıt ekle
+            $stmt = $masterPdo->prepare("INSERT INTO companies (name, db_name, start_date, status) VALUES (?, ?, CURDATE(), 'Aktif')");
             $stmt->execute([$firma_adi, $db_name]);
-            $company_id = $pdo->lastInsertId();
+            $company_id = $masterPdo->lastInsertId();
+
+            // Yeni veritabanına bağlan ve tenant tablolarını oluştur
+            $tenantPdo = new PDO("mysql:host=localhost;dbname=$db_name;charset=utf8mb4", $masterDbUser, $masterDbPass);
+            $tenantPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Örnek tablolar (stoklar, faturalar, cariler)
+            $tenantPdo->exec("
+                CREATE TABLE IF NOT EXISTS stoklar (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    stok_kodu VARCHAR(50),
+                    stok_adi VARCHAR(255),
+                    birim VARCHAR(10),
+                    miktar DECIMAL(10,2)
+                )
+            ");
+            $tenantPdo->exec("
+                CREATE TABLE IF NOT EXISTS faturalar (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    fatura_no VARCHAR(50),
+                    tarih DATE,
+                    cari_unvan VARCHAR(255),
+                    tutar DECIMAL(12,2),
+                    kdv_orani DECIMAL(5,2)
+                )
+            ");
+            $tenantPdo->exec("
+                CREATE TABLE IF NOT EXISTS cariler (
+                     id INT AUTO_INCREMENT PRIMARY KEY,
+                     isim VARCHAR(255),
+                     vergi_no VARCHAR(50),
+                     telefon VARCHAR(20),
+                     email VARCHAR(100),
+                     adres TEXT,
+                     il VARCHAR(100),
+                     ilce VARCHAR(100),
+                     aciklama TEXT,
+                     tip ENUM('Musteri', 'Calisan', 'Tedarikci')
+                )
+            ");
+            $tenantPdo->exec("
+                CREATE TABLE IF NOT EXISTS depolar (
+                     id INT AUTO_INCREMENT PRIMARY KEY,
+                     ad VARCHAR(255) NOT NULL,
+                     adres TEXT,
+                     telefon VARCHAR(20),
+                     yetkili VARCHAR(255),
+                     durum ENUM('aktif', 'pasif') DEFAULT 'aktif'
+                )
+            ");
+            $tenantPdo->exec("
+                CREATE TABLE IF NOT EXISTS depo_transferleri (
+                     id INT AUTO_INCREMENT PRIMARY KEY,
+                     transfer_no VARCHAR(50) NOT NULL,
+                     tarih DATE NOT NULL,
+                     kaynak_depo_id INT NOT NULL,
+                     hedef_depo_id INT NOT NULL,
+                     aciklama TEXT,
+                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                     FOREIGN KEY (kaynak_depo_id) REFERENCES depolar(id),
+                     FOREIGN KEY (hedef_depo_id) REFERENCES depolar(id)
+                )
+            ");
         }
 
-        // 2. Kullanıcıyı ekle
-        $stmt = $pdo->prepare("INSERT INTO users (email, password_hash, company_id) VALUES (?, ?, ?)");
-        $stmt->execute([$email, $hashedPassword, $company_id]);
+        // Kullanıcıyı ekle
+        $stmt = $masterPdo->prepare("INSERT INTO users (email, password_hash, company_id, verification_code, is_verified) VALUES (?, ?, ?, ?, 0)");
+        $stmt->execute([$email, $hashedPassword, $company_id, $verification_code]);
+
     } catch (PDOException $e) {
         die("Kayıt sırasında hata: " . $e->getMessage());
     }
@@ -76,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'phpsmtp2@gmail.com'; // Gmail adresin
-        $mail->Password   = 'ditdmciosmoqolba';     // Gmail uygulama şifren
+        $mail->Password   = 'ditdmciosmoqolba';  // Gmail uygulama şifren
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
@@ -90,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->send();
 
         // Başarılıysa verify.php sayfasına yönlendir
-        //header("Location: verify.php?email=" . urlencode($email));
+        header("Location: verify.php?email=" . urlencode($email));
         exit;
     } catch (Exception $e) {
         die("Mail gönderilemedi: {$mail->ErrorInfo}");
@@ -111,5 +165,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </form>
   <p class="login-link">Zaten bir hesabın var mı? <a href="login.php">Giriş Yap</a></p>
 </div>
-
-

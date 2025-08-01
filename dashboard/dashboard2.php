@@ -1,6 +1,5 @@
 <?php
-$userName = 'Miraç Deprem';
-$companyName = 'Atia Yazılım';
+require '../config/config.php'
 ?>
 <!DOCTYPE html>
 <html lang="tr">

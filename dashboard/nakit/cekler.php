@@ -1,6 +1,6 @@
 <?php
-session_start();
 
+require '../../config/config.php';
 // Statik veriler
 $cekler = [
     ['id' => 1, 'cek_no' => 'CHK001', 'banka_adi' => 'Ziraat Bankası', 'sube_adi' => 'Merkez Şube', 'tutar' => 5000.00, 'vade_tarihi' => '2024-07-15', 'durum' => 'Beklemede', 'duzenleyen' => 'Ahmet Yılmaz', 'aciklama' => 'Müşteri ödemesi'],

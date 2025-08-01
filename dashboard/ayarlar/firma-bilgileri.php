@@ -1,5 +1,5 @@
 <?php
-// Gerekli oturum ve kullanıcı bilgileri burada alınabilir (gerekirse)
+require '../../config/config.php';
 ?>
 <!DOCTYPE html>
 <html lang="tr">

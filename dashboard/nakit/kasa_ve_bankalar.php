@@ -1,6 +1,6 @@
 <?php
-session_start();
 
+require '../../config/config.php';
 // Statik kullanıcı bilgileri
 $userName = 'Kullanıcı';
 $companyName = 'Şirket';

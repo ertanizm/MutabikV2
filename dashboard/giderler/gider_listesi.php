@@ -1,6 +1,11 @@
 <?php
-session_start();
 
+require '../../config/config.php';
+try {
+   $pdo = getTenantPDO();
+} catch (Exception $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
 $userName = 'Miraç Deprem';
 $companyName = 'Atia Yazılım';
 

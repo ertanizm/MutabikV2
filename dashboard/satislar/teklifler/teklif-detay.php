@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../config/db_connect.php';
+require '../../../config/config.php';
 
 // Teklif ID'sini al
 $teklifId = $_GET['id'] ?? null;

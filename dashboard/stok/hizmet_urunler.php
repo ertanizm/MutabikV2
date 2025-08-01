@@ -1,5 +1,11 @@
 <?php
-require_once __DIR__ . '/../../config/db_connect.php';
+
+require '../../config/config.php';
+try {
+   $pdo = getTenantPDO();
+} catch (Exception $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
 
 // ===============================================
 // ÜRÜN EKLEME VEYA GÜNCELLEME İŞLEMİ (POST isteği ile)

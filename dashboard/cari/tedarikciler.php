@@ -1,8 +1,14 @@
 <?php
-require_once __DIR__ . '/../../config/db_connect.php';
+
+require '../../config/config.php';
+try {
+   $pdo = getTenantPDO();
+} catch (Exception $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+   
     // Sayfalama ayarları
     $limit = 2; // Her sayfada gösterilecek kayıt sayısı
     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;

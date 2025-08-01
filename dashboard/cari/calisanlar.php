@@ -1,5 +1,11 @@
 <?php
-require_once __DIR__ . '/../../config/db_connect.php';
+
+require '../../config/config.php';
+try {
+   $pdo = getTenantPDO();
+} catch (Exception $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
 
 if (isset($_GET['export']) && $_GET['export'] == 1) {
     header('Content-Type: text/csv; charset=utf-8');

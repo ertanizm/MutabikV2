@@ -1,22 +1,8 @@
 <?php
 
-$host = 'localhost';
-$db   = 'master_db';
-$user = 'root';
-$pass = ''; // Veritabanı şifreni buraya gir
-$charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    die("Veritabanı bağlantı hatası: " . $e->getMessage());
-}
+// Config dosyasını dahil et
+require '../config/config.php';  // Burada $masterPdo hazır
 
 $error = '';
 $success = '';
@@ -28,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$email || !$code) {
         $error = "Lütfen tüm alanları doldurun.";
     } else {
-        $stmt = $pdo->prepare("SELECT verification_code, is_verified FROM users WHERE email = ?");
+        $stmt = $masterPdo->prepare("SELECT verification_code, is_verified FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
@@ -37,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($user['is_verified'] == 1) {
             $error = "Bu hesap zaten doğrulanmış.";
         } elseif ($user['verification_code'] == $code) {
-            $update = $pdo->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
+            $update = $masterPdo->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
             $update->execute([$email]);
             $success = "Hesabınız doğrulandı! Giriş yapabilirsiniz.";
         } else {
@@ -67,4 +53,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <p>Mail adresine gönderilen kodu giriniz.</p>
   <?php endif; ?>
 </div>
+
 

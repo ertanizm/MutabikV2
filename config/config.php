@@ -1,21 +1,24 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$config = require __DIR__ . '/.env.php';
 // Proje kök yolu (tüm yönlendirme ve linklerde kullanmak için)
 define('BASE_URL', '/MutabikV2/');
-// Giriş bilgileri
-$host = 'localhost';
-$masterDbUser = 'root';
-$masterDbPass = '';
-$masterDbName = 'master_db';
 
-// 0. master_db yoksa oluştur ve tabloları oluştur
+// Veritabanı erişim bilgileri
+$host = $config['DB_HOST'];
+$masterDbUser = $config['DB_USER'];
+$masterDbPass = $config['DB_PASS'];
+$masterDbName = $config['DB_NAME'];
+
 try {
-    $pdo = new PDO("mysql:host=$host", $masterDbUser,'');
+    // MySQL sunucusuna bağlantı (db seçmeden)
+    $pdo = new PDO("mysql:host=$host", $masterDbUser, $masterDbPass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Veritabanı oluştur
+    // master_db yoksa oluştur
     $pdo->exec("CREATE DATABASE IF NOT EXISTS `$masterDbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
-
-    // Veritabanını seç
     $pdo->exec("USE `$masterDbName`");
 
     // companies tablosu
@@ -37,116 +40,62 @@ try {
             password_hash VARCHAR(255) NOT NULL,
             company_id INT NOT NULL,
             role ENUM('Admin', 'Kullanici') DEFAULT 'Kullanici',
+            verification_code VARCHAR(10),
+            is_verified TINYINT(1) DEFAULT 0,
             FOREIGN KEY (company_id) REFERENCES companies(id)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
         )
     ");
-   } catch (PDOException $e) {
+} catch (PDOException $e) {
     die("Ana veritabanı oluşturulamadı: " . $e->getMessage());
 }
 
-// 1. master_db bağlantısı
 try {
-    $masterPdo = new PDO("mysql:host=$host;dbname=$masterDbName", $masterDbUser, '');
+    // master_db bağlantısını PDO ile hazırla (global kullanıma)
+    $masterPdo = new PDO("mysql:host=$host;dbname=$masterDbName;charset=utf8mb4", $masterDbUser, $masterDbPass);
     $masterPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Bağlantı hatası: " . $e->getMessage());
+    die("Ana veritabanına bağlanılamadı: " . $e->getMessage());
 }
 
-// 2. Formdan gelen veriler
-$firmaAdi = $_POST['firma_adi'] ?? '';
-$email = $_POST['email'] ?? '';
-$password = $_POST['password'] ?? '';
+/**
+ * Tenant veritabanı bağlantısı döner.
+ * @param int $company_id
+ * @return PDO
+ * @throws Exception
+ */
+function getTenantPDO(int $company_id = null): PDO {
+    global $host, $masterDbUser, $masterDbPass, $masterPdo;
+   // Eğer company_id parametre olarak gelmezse, session'dan al
+    if (!$company_id) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-if (empty($firmaAdi) || empty($email) || empty($password)) {
-    die("❗ Lütfen tüm alanları doldurun.");
-}
-
-// Veritabanı ismini oluştur (örn: atia_yazilim_db)
-$dbName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '_', $firmaAdi)) . '_db';
-
-try {
-    // Aynı db_name var mı kontrol et
-    $stmt = $masterPdo->prepare("SELECT COUNT(*) FROM companies WHERE db_name = :db_name");
-    $stmt->execute(['db_name' => $dbName]);
-    $count = $stmt->fetchColumn();
-
-    if ($count > 0) {
-        die("❗ Bu firma adına ait veritabanı zaten mevcut. Lütfen farklı bir isim deneyin.");
+        if (isset($_SESSION['company_id'])) {
+            $company_id = $_SESSION['company_id'];
+        } else {
+            throw new Exception("Company ID belirlenemedi. Tenant veritabanına bağlanılamıyor.");
+        }
     }
 
-    // Önce veritabanını oluştur (transaction dışında)
-    $masterPdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+    // Şirketin db_name bilgisini master_db'den al
+    $stmt = $masterPdo->prepare("SELECT db_name FROM companies WHERE id = ?");
+    $stmt->execute([$company_id]);
+    $db = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Transaction başlat (şirket ve kullanıcı ekleme işlemleri için)
-    $masterPdo->beginTransaction();
+     if (!$db) {
+        throw new Exception("Geçersiz company ID: {$company_id}");
+    }
 
-    // companies tablosuna kayıt ekle
-    $stmt = $masterPdo->prepare("
-        INSERT INTO companies (name, db_name, start_date, status)
-        VALUES (:name, :db_name, CURDATE(), 'Aktif')
-    ");
-    $stmt->execute([
-        'name' => $firmaAdi,
-        'db_name' => $dbName
-    ]);
-    $companyId = $masterPdo->lastInsertId();
+    $tenantDbName = $db['db_name'];
 
-    // users tablosuna admin kullanıcı ekle
-    $stmt = $masterPdo->prepare("
-        INSERT INTO users (email, password_hash, company_id, role)
-        VALUES (:email, :password, :company_id, 'Admin')
-    ");
-    $stmt->execute([
-        'email' => $email,
-        'password' => hash('sha256', $password),
-        'company_id' => $companyId
-    ]);
 
-    // Transaction commit et
-    $masterPdo->commit();
-
-    // Yeni veritabanına bağlan
-    $tenantPdo = new PDO("mysql:host=$host;dbname=$dbName", $masterDbUser, $masterDbPass);
+    // Tenant veritabanına bağlan
+    $tenantPdo = new PDO("mysql:host=$host;dbname=$tenantDbName;charset=utf8mb4", $masterDbUser, $masterDbPass);
     $tenantPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Tenant tablolarını oluştur (her tablo ayrı exec ile)
-    $tenantPdo->exec("
-        CREATE TABLE IF NOT EXISTS stoklar (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            stok_kodu VARCHAR(50),
-            stok_adi VARCHAR(255),
-            birim VARCHAR(10),
-            miktar DECIMAL(10,2)
-        )
-    ");
-
-    $tenantPdo->exec("
-        CREATE TABLE IF NOT EXISTS faturalar (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            fatura_no VARCHAR(50),
-            tarih DATE,
-            cari_unvan VARCHAR(255),
-            tutar DECIMAL(12,2),
-            kdv_orani DECIMAL(5,2)
-        )
-    ");
-
-    $tenantPdo->exec("
-        CREATE TABLE IF NOT EXISTS cariler (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            unvan VARCHAR(255),
-            vergi_no VARCHAR(50),
-            telefon VARCHAR(20),
-            email VARCHAR(100)
-        )
-    ");
-    echo "✅ Şirket ve veritabanı başarıyla oluşturuldu: $dbName";
-
-} catch (PDOException $e) {
-    if ($masterPdo->inTransaction()) {
-        $masterPdo->rollBack();
-    }
-    echo "❌ Hata: " . $e->getMessage();
+    return $tenantPdo;
 }
+
