@@ -42,6 +42,8 @@ try {
             role ENUM('Admin', 'Kullanici') DEFAULT 'Kullanici',
             verification_code VARCHAR(10),
             is_verified TINYINT(1) DEFAULT 0,
+            reset_token VARCHAR(255) DEFAULT NULL,
+            reset_token_expire DATETIME DEFAULT NULL,
             FOREIGN KEY (company_id) REFERENCES companies(id)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
